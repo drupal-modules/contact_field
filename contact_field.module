@@ -1,0 +1,83 @@
+<?php
+//$Id$
+
+
+/**
+ * @file
+ *
+ * Add custom fields to site wide contact form
+ *
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ */
+
+
+
+/**
+ * Implementation of hook_menu
+ * 
+ * @return $item
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ */
+function contact_field_menu() {
+  $item = array();
+  $item['admin/build/contact/manage'] = array(
+    'type' => MENU_LOCAL_TASK,
+    'title' => "Manage fields",
+    'title callback' => 't',
+    'page callback' => 'contact_field_list_field',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'contact_field_admin.inc',
+    'file path' => drupal_get_path('module', 'contact_field'),
+    'weight' => 50,
+  );
+
+  $item['admin/build/contact/add/%'] = array(
+    'type' => MENU_CALLBACK,
+    'page callback' => 'contact_field_add_field',
+    'page arguments' => array(4),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'contact_field_admin.inc',
+    'file path' => drupal_get_path('module', 'contact_field'),
+    'weight' => 50,
+  );
+
+  return $item;
+}
+
+
+
+/**
+ * Implementation of hook_form_FORM_ID_alter
+ * 
+ * @param $form
+ * @param $form_state
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ */
+function contact_field_form_contact_mail_page_alter(&$form, $form_state) {
+  $am__elements = _get_field_details();
+  foreach ($am__elements as $name => $value) {
+    $form[$name] = $value;
+  }
+}
+
+
+
+/**
+ * _get_field_details
+ * 
+ * Return created fields
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ */
+function _get_field_details() {
+  $r__result = db_query("SELECT * FROM {contact_fields} WHERE enabled = 1");
+  while($om__result = db_fetch_object($r__result)) {
+    $am__settings = unserialize($om__result->settings);
+    $am__field[$om__result->field_name] = array(
+      '#type' => $om__result->field_type,
+      '#title' => $am__settings['title'],
+      '#required' => $om__result->required,
+      '#required' => $om__result->required,
+    );
+  }
+  return $am__field;
+}
