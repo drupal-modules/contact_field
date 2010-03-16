@@ -1,5 +1,6 @@
 ;$Id$
 name = Contact fields
 description = Add custom fields to site wide contact form
+package = Contact fields
 core = 6.x
 dependencies[] = contact

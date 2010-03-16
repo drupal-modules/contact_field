@@ -1,0 +1,6 @@
+;$Id$
+name = Contact form Text field
+description = Add text box on contact form. This module supports textbox and textarea fields.
+package = Contact fields
+core = 6.x
+dependencies[] = contact_field

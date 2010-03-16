@@ -1,0 +1,6 @@
+;$Id$
+name = Contact form list field
+description = Add select boxex on contact form
+package = Contact fields
+core = 6.x
+dependencies[] = contact_field

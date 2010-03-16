@@ -16,10 +16,58 @@
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field($ss__type) {
-  return drupal_get_form('contact_field_add_field_'. $ss__type .'_form');
+function contact_field_add_field($ss__type, $edit = FALSE) {
+	if ($edit) {
+		$ss__field_type = _get_field_type($ss__type);
+		switch($ss__field_type) {
+	    case 'text':
+	      if (module_exists('contact_textfield')) {
+	        return drupal_get_form('contact_field_add_field_text_form', $form_state, $ss__type);
+	      }
+	      break;
+	    case 'area':
+	      if (module_exists('contact_textfield')) {
+	        return drupal_get_form('contact_field_add_field_textarea_form', $form_state, $ss__type);
+	      }
+	      break;
+	    case 'radios':
+	    case 'checkboxes':
+	      if (module_exists('contact_option')) {
+	        return drupal_get_form('contact_field_add_field_option_form', $form_state, $ss__type);
+	      }
+	      break;
+	    case 'list':
+	      if (module_exists('contact_listfield')) {
+	        return drupal_get_form('contact_field_add_field_listfield_form', $form_state, $ss__type);
+	      }
+	      break;
+	  }
+	}
+	else{
+		switch($ss__type) {
+	    case 'text':
+	      if (module_exists('contact_textfield')) {
+	        return drupal_get_form('contact_field_add_field_text_form', $form_state);
+	      }
+	      break;
+	    case 'area':
+	      if (module_exists('contact_textfield')) {
+	        return drupal_get_form('contact_field_add_field_textarea_form', $form_state);
+	      }
+	      break;
+	    case 'option':
+	      if (module_exists('contact_option')) {
+	        return drupal_get_form('contact_field_add_field_option_form', $form_state);
+	      }
+	      break;
+	    case 'list':
+	      if (module_exists('contact_listfield')) {
+	        return drupal_get_form('contact_field_add_field_listfield_form', $form_state);
+	      }
+	      break;
+	  }
+	}
 }
-
 
 
 /**
@@ -28,118 +76,19 @@ function contact_field_add_field($ss__type) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_list_field() {
+	$am__fields = module_invoke_all('info');
   drupal_set_title(t("Manage fields"));
   $output = _get_fields();
   $links = array();
-  $links[] = array(
-    'href' => 'admin/build/contact/add/text',
-    'title' => t("Text field"),
-  );
-  $links[] = array(
-    'href' => 'admin/build/contact/add/textarea',
-    'title' => t("Text area"),
-  );
-  $links[] = array(
-    'href' => 'admin/build/contact/add/option',
-    'title' => t("Radio/Check box"),
-  );
-  $links[] = array(
-    'href' => 'admin/build/contact/add/list',
-    'title' => t("List"),
-  );
+  foreach ($am__fields as $key => $value) {
+  	$links[] = array(
+  	  'href' => 'admin/build/contact/add/'. $value['type'],
+  	  'title' => $value['title'],
+  	  'description' => $value['description'],
+  	);
+  }
   return $output . theme('links', $links, '');
 }
-
-
-
-/**
- * contact_field_add_field_text_form
- * 
- * Form builder function
- * 
- * @return unknown_type
- * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
- */
-function contact_field_add_field_text_form() {
-  drupal_set_title(t("Configure contact field"));
-  $form = array();
-  
-  $form['field_type'] = array(
-    '#type' => 'hidden',
-    '#default_value' => 'textfield',
-  );
-  
-  $form['contact_field_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t("Field name"),
-    '#description' => t("Machine readable name of the field. This should only
-      contain alphanumaric charachters and underscore."),
-    '#required' => TRUE,
-    '#weight' => -50,
-  );
-
-  $form['contact_field_label'] = array(
-    '#type' => 'textfield',
-    '#title' => t("Field title"),
-    '#description' => t("Provide the title of the field"),
-    '#required' => TRUE,
-    '#weight' => -49,
-  );
-
-  $form['contact_field_require'] = array(
-    '#type' => 'radios',
-    '#title' => t("Required?"),
-    '#description' => t("Whether this field is mandatory."),
-    '#options' => array(
-      0 => t("No"),
-      1 => t("Yes"),
-    ),
-    '#required' => TRUE,
-    '#weight' => -48,
-  );
-
-  $form['contact_field_enabled'] = array(
-    '#type' => 'checkbox',
-    '#title' => t("Display this field"),
-    '#description' => t("Check this box to make this field available on 
-      contact form."),
-    '#weight' => -47,
-  );
-
-  $form['#submit'] = array('contact_field_submit');
-  $form['contact_field_submit'] = array(
-    '#type' => 'submit',
-    '#value' => t("Save configuration"),
-  );
-
-  return $form;
-}
-
-
-
-
-/**
- * Implementation of hook_submit
- * 
- * @param $form
- * @param $form_values
- * @return unknown_type
- * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
- */
-function contact_field_submit($form, $form_values) {
-  $ss__field_name = $form_values['values']['contact_field_name'];
-  $ss__field_type = $form_values['values']['field_type'];
-  $ss__field_required = $form_values['values']['contact_field_require'];
-  $ss__field_enabled = $form_values['values']['contact_field_enabled'];
-  $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
-
-  db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d)",
-    $ss__field_name, $ss__field_type, serialize($ss__field_settings),
-    $ss__field_required, $ss__field_enabled);
-  drupal_set_message($ss__field_settings['title'] ." ". t("created"));
-  drupal_goto('admin/build/contact/manage');
-}
-
 
 
 /**
@@ -152,7 +101,7 @@ function contact_field_submit($form, $form_values) {
  */
 function _get_fields() {
   $header = array(t("Title"), t("Name"), t("Type"), t("Required"),
-    t("Enabled"), NULL, NULL);
+    t("Enabled"), array('data' => t("Operation"), 'colspan' => 2));
   $r__result = db_query("SELECT * FROM {contact_fields}");
   while ($om__result = db_fetch_object($r__result)) {
     $am__settings = unserialize($om__result->settings);
@@ -160,8 +109,8 @@ function _get_fields() {
       $am__settings['title'],
       $om__result->field_name,
       $om__result->field_type,
-      $om__result->required,
-      $om__result->enabled,
+      ($om__result->required ? t("Yes") : t("No")),
+      ($om__result->enabled ? t("Yes") : t("No")),
       l(t("edit"), 'admin/build/contact/'. $om__result->field_name ."/edit"),
       l(t("delete"), 'admin/build/contact/'. $om__result->field_name ."/delete"),
     );
