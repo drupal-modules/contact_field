@@ -197,8 +197,16 @@ function contact_field_option_update($form, $form_values) {
   $ss__field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
   $ss__field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
   $ss__field_weight = $form_values['values']['contact_field_weight'];
-  $ss__field_settings['options'] = explode("|", $form_values['values']['contact_field_vlaues']);
   $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
+  $am__options = explode("\n", $form_values['values']['contact_field_vlaues']);
+  foreach ($am__options as $option) {
+    var_dump($am__options);
+    $option = contact_field_filter_xss($option);
+    if (strpos($option, '|') !== FALSE) {
+      list($key, $value) = explode("|", $option);
+      $ss__field_settings['options'][$key] = $value;
+    }
+  }
 
   db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d, 
     required = %d WHERE field_name = '%s'", serialize($ss__field_settings), 
