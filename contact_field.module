@@ -130,7 +130,14 @@ function contact_field_edit_field($ss__field) {
 }
 
 
-
+/**
+ * _get_field_values
+ * 
+ * Return all the details related to a field
+ * 
+ * @param array $ss__field
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ */
 function _get_field_values($ss__field) {
 	if ($ss__field) {
 		$r__result_field = db_query("SELECT * FROM {contact_fields} WHERE 
@@ -151,8 +158,12 @@ function _get_field_values($ss__field) {
 
 
 /**
+ * contact_field_filter_xss
  * 
- * @param unknown_type $ss__string
+ * Filter the provided string for restricted html tags
+ * 
+ * @param string $ss__string
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_filter_xss($ss__string) {
 	return filter_xss($ss__string, _contact_field_allowed_tags());
