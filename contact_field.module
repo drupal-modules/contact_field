@@ -206,19 +206,19 @@ function _get_field_type($ss__field_name) {
  */
 function contact_field_mail_alter($message) {
 	$am__fields = _get_enabled_fields();
-	$ss__addtional = t("Addtional information") ."/\n/\r";
+	$ss__addtional = t("Addtional information") ."\n\r";
 	foreach ($am__fields as $field => $lable) {
 		if (is_array($message['params'][$field])) {
-			$ss__addtional .= $label ."/\n/\r";
+			$ss__addtional .= $label ."\n\r";
 			foreach ($message['params'][$field] as $key => $value) {
-				$ss__addtional .= $key .": ". $value ."/\n/\r";
+				$ss__addtional .= $key .": ". $value ."\n\r";
 			}
 		}
 		else {
-			$ss__addtional .= $lable .":". $message['params'][$field]; 
+			$ss__addtional .= $lable .": \t". $message['params'][$field] ."/n/r"; 
 		}
 	}
-	$message['body'][] = "/\n/\r". $ss__addtional; 
+	$message['body'][] = "\n\r". $ss__addtional; 
 }
 
 
