@@ -68,9 +68,12 @@ function contact_field_menu() {
  */
 function contact_field_form_contact_mail_page_alter(&$form, $form_state) {
   $am__elements = _get_field_details();
-  foreach ($am__elements as $name => $value) {
-    $form[$name] = $value;
+  if (!empty($am__elements)) {
+	  foreach ($am__elements as $name => $value) {
+	    $form[$name] = $value;
+	  }
   }
+  
   $form['submit']['#weight'] = 10;
 }
 
