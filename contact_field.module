@@ -219,6 +219,7 @@ function contact_field_mail_alter($message) {
 			$ss__addtional .= $lable .":". $message['params'][$field]; 
 		}
 	}
+	$message['body'] .= $ss__addtional; 
 }
 
 

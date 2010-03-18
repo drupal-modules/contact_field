@@ -168,7 +168,6 @@ function contact_field_listfield_submit($form, $form_values) {
   $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
   $am__options = explode("\n", $form_values['values']['contact_field_vlaues']);
   foreach ($am__options as $option) {
-    var_dump($am__options);
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
       list($key, $value) = explode("|", $option);
