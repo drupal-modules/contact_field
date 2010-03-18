@@ -73,7 +73,6 @@ function contact_field_form_contact_mail_page_alter(&$form, $form_state) {
 	    $form[$name] = $value;
 	  }
   }
-  
   $form['submit']['#weight'] = 10;
 }
 
@@ -219,7 +218,7 @@ function contact_field_mail_alter($message) {
 			$ss__addtional .= $lable .":". $message['params'][$field]; 
 		}
 	}
-	$message['body'] .= $ss__addtional; 
+	$message['body'][] = "/\n/\r". $ss__addtional; 
 }
 
 
