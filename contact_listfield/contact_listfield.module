@@ -32,22 +32,49 @@ function contact_listfield_info() {
  * 
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_listfield_form() {
+function contact_field_add_field_listfield_form($form_state, $ss__field = NULL) {
 	drupal_set_title(t("Configure list field"));
 	$am__field_values = _get_field_values($ss__field);
-  $form['field_type'] = array(
-    '#type' => 'hidden',
-    '#default_value' => 'select',
-  );
+	
+	if (!empty($am__field_values['options'])) {
+		foreach ($am__field_values['options'] as $key => $value) {
+			$ss__option .= $key ."|". $value;
+		}
+	}
+	
+  if ($am__field_values['name']) {
+  	$form['name'] = array(
+	    '#type' => 'item',
+	    '#title' => t("Field name"),
+	    '#description' => t("Machine readable name of the field. This should only
+	      contain alphanumaric charachters and underscore."),
+	  	'#value' => $am__field_values['name'],
+	    '#weight' => -50,
+	  );
+	  
+	  $form['contact_field_name'] = array(
+	    '#type' => 'hidden',
+	    '#value' => $am__field_values['name'],
+	  );
+	  $form['#submit'] = array('contact_field_listfield_update');
+  }
+  else {
+  	$form['field_type'] = array(
+	    '#type' => 'hidden',
+	    '#default_value' => 'select',
+	  );
+	  
+    $form['contact_field_name'] = array(
+	    '#type' => 'textfield',
+	    '#title' => t("Field name"),
+	    '#description' => t("Machine readable name of the field. This should only
+	      contain alphanumaric charachters and underscore."),
+	    '#required' => TRUE,
+	    '#weight' => -50,
+	  );
+	  $form['#submit'] = array('contact_field_listfield_submit');	
+  }
   
-  $form['contact_field_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t("Field name"),
-    '#description' => t("Machine readable name of the field. This should only
-      contain alphanumaric charachters and underscore."),
-    '#required' => TRUE,
-    '#weight' => -50,
-  );
   
   $form['contact_field_label'] = array(
     '#type' => 'textfield',
@@ -67,7 +94,7 @@ function contact_field_add_field_listfield_form() {
       0 => t("Single"),
       1 => t("Multiple"),
     ),
-    '#default_value' => $am__field_values['num_value'],
+    '#default_value' => (!empty($am__field_values['num_value']) ? $am__field_values['num_value'] : 0),
     '#required' => TRUE,
     '#weight' => -48,
   );
@@ -92,11 +119,11 @@ function contact_field_add_field_listfield_form() {
     '#type' => 'radios',
     '#title' => t("Required?"),
     '#description' => t("Whether this field is mandatory."),
-    '#default_value' => (!empty($am__field_values['required']) ? $am__field_values['required'] : 1),
     '#options' => array(
       0 => t("No"),
       1 => t("Yes"),
     ),
+    '#default_value' => (!empty($am__field_values) ? $am__field_values['required'] : 1),
     '#required' => TRUE,
     '#weight' => -45,
   );
@@ -124,7 +151,7 @@ function contact_field_add_field_listfield_form() {
     '#type' => 'textarea',
     '#title' => t("Allowed values"),
     '#description' => t("Add key-value pair in key|value format. Add each pair in separate line."),
-    '#default_value' => (!empty($am__field_values['values']) ? $am__field_values['values'] : ""),
+    '#default_value' => (!empty($ss__option) ? $ss__option : ""),
     '#weight' => -42,
   );
 
@@ -133,7 +160,7 @@ function contact_field_add_field_listfield_form() {
     '#title' => t("Help text"),
     '#description' => t("Help text will appear just beneath the field like this, 
       to help user in filling value in the field."),
-    '#default_value' => (!empty($am__field_values['help']) ? $am__field_values['help'] : ""),
+    '#default_value' => (!empty($am__field_values['description']) ? $am__field_values['description'] : ""),
     '#weight' => -41,
   );
   
@@ -142,21 +169,20 @@ function contact_field_add_field_listfield_form() {
     '#value' => t("Save configuration"),
   );
   
-  $form['#submit'] = array('contact_field_listfield_submit');
-  
   return $form;
 }
 
 
 
+/**
+ * 
+ * @param $form
+ * @param $form_values
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ */
 function contact_field_listfield_submit($form, $form_values) {
   $ss__num_values = $form_values['values']['contact_field_num_value'];
-  if ($ss__num_values) {
-    $ss__field_settings['multiple'] = TRUE;
-  }
-  else {
-    $ss__field_settings['multiple'] = FALSE;
-  }
+  $ss__field_settings['multiple'] = ($ss__num_values) ? TRUE : FALSE;
 	$ss__field_name = $form_values['values']['contact_field_name'];
   $ss__field_type = $form_values['values']['field_type'];
   $ss__field_required = $form_values['values']['contact_field_require'];
@@ -164,6 +190,7 @@ function contact_field_listfield_submit($form, $form_values) {
   $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
   $ss__field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
   $ss__field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
+  $ss__field_settings['num_value'] = $ss__num_values;
   $ss__field_weight = $form_values['values']['contact_field_weight'];
   $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
   $am__options = explode("\n", $form_values['values']['contact_field_vlaues']);
@@ -179,5 +206,43 @@ function contact_field_listfield_submit($form, $form_values) {
     $ss__field_name, $ss__field_type, serialize($ss__field_settings),
     $ss__field_required, $ss__field_enabled, $ss__field_weight);
   drupal_set_message($ss__field_settings['title'] ." ". t("created"));
+  drupal_goto('admin/build/contact/manage');
+}
+
+
+
+
+/**
+ * 
+ * @param unknown_type $form
+ * @param unknown_type $form_values
+ */
+function contact_field_listfield_update($form, $form_values) {
+	$ss__num_values = $form_values['values']['contact_field_num_value'];
+  $ss__field_settings['multiple'] = $ss__num_values;
+  $ss__field_name = $form_values['values']['contact_field_name'];
+  $ss__field_type = $form_values['values']['field_type'];
+  $ss__field_required = $form_values['values']['contact_field_require'];
+  $ss__field_enabled = $form_values['values']['contact_field_enabled'];
+  $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
+  $ss__field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
+  $ss__field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
+  $ss__field_settings['num_value'] = $ss__num_values;
+  $ss__field_weight = $form_values['values']['contact_field_weight'];
+  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
+  $am__options = explode("\n", $form_values['values']['contact_field_vlaues']);
+  foreach ($am__options as $option) {
+    $option = contact_field_filter_xss($option);
+    if (strpos($option, '|') !== FALSE) {
+      list($key, $value) = explode("|", $option);
+      $ss__field_settings['options'][$key] = $value;
+    }
+  }
+
+  db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d, 
+    required = %d, weight = '%s' WHERE field_name = '%s'", serialize($ss__field_settings), 
+    $ss__field_enabled, $ss__field_required, $ss__field_weight, $ss__field_name);
+    
+  drupal_set_message($ss__field_settings['title'] ." ". t("Updated"));
   drupal_goto('admin/build/contact/manage');
 }

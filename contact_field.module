@@ -34,7 +34,7 @@ function contact_field_menu() {
   $item['admin/build/contact/add/%'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'contact_field_add_field',
-    'page arguments' => array(4),
+    'page arguments' => array(3, 4),
     'access arguments' => array('administer site configuration'),
     'file' => 'contact_field_admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
@@ -43,8 +43,10 @@ function contact_field_menu() {
   $item['admin/build/contact/%/edit'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'contact_field_add_field',
-    'page arguments' => array(3, TRUE),
+    'page arguments' => array(3),
     'access arguments' => array('administer site configuration'),
+    'file' => 'contact_field_admin.inc',
+    'file path' => drupal_get_path('module', 'contact_field'),
   );
   
   $item['admin/build/contact/%/delete'] = array(
@@ -66,7 +68,6 @@ function contact_field_menu() {
  * @param $form_state
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-//contact_mail_page_
 function contact_field_form_alter(&$form, $form_state, $form_id) {
 	if (strstr($form_id, 'contact_mail')) {
 		$am__elements = _get_field_details();
@@ -154,8 +155,10 @@ function _get_field_values($ss__field) {
 			$am__field_value['weight'] = $om__result_field->weight;
 			$am__field_value['required'] = $om__result_field->required;
 			$am__field_value['enabled'] = $om__result_field->enabled;
+			foreach ($am__field as $key => $value) {
+				$am__field_value[$key] = $value;
+			}
 		}
-		
 		return $am__field_value;
 	}
 }

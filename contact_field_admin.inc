@@ -16,29 +16,29 @@
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field($ss__type, $edit = FALSE) {
-	if ($edit) {
-		$ss__field_type = _get_field_type($ss__type);
+function contact_field_add_field($op, $ss__type = NULL) {
+	if ($op != 'add') {
+		$ss__field_type = _get_field_type($op);
 		switch($ss__field_type) {
 	    case 'text':
 	      if (module_exists('contact_textfield')) {
-	        return drupal_get_form('contact_field_add_field_text_form', $form_state, $ss__type);
+	        return drupal_get_form('contact_field_add_field_text_form', $op);
 	      }
 	      break;
 	    case 'area':
 	      if (module_exists('contact_textfield')) {
-	        return drupal_get_form('contact_field_add_field_textarea_form', $form_state, $ss__type);
+	        return drupal_get_form('contact_field_add_field_textarea_form', $op);
 	      }
 	      break;
 	    case 'radios':
 	    case 'checkboxes':
 	      if (module_exists('contact_option')) {
-	        return drupal_get_form('contact_field_add_field_option_form', $form_state, $ss__type);
+	        return drupal_get_form('contact_field_add_field_option_form', $op);
 	      }
 	      break;
-	    case 'list':
+	    case 'select':
 	      if (module_exists('contact_listfield')) {
-	        return drupal_get_form('contact_field_add_field_listfield_form', $form_state, $ss__type);
+	        return drupal_get_form('contact_field_add_field_listfield_form', $op);
 	      }
 	      break;
 	  }
@@ -83,7 +83,7 @@ function contact_field_list_field() {
   foreach ($am__fields as $key => $value) {
   	$links[] = array(
   	  'href' => 'admin/build/contact/add/'. $value['type'],
-  	  'title' => $value['title'],
+  	  'title' => t("Add a") ." ". $value['title'],
   	  'description' => $value['description'],
   	);
   }

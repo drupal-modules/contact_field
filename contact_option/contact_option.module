@@ -30,17 +30,42 @@ function contact_option_info() {
  * 
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_option_form() {
+function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
 	drupal_set_title(t("Configure option field"));
 	$am__field_values = _get_field_values($ss__field);
-  $form['contact_field_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t("Field name"),
-    '#description' => t("Machine readable name of the field. This should only
-      contain alphanumaric charachters and underscore."),
-    '#required' => TRUE,
-    '#weight' => -50,
-  );
+	if (!empty($am__field_values['options'])) {
+    foreach ($am__field_values['options'] as $key => $value) {
+      $ss__option .= $key ."|". $value;
+    }
+  }
+  
+  if ($am__field_values['name']) {
+    $form['name'] = array(
+      '#type' => 'item',
+      '#title' => t("Field name"),
+      '#description' => t("Machine readable name of the field. This should only
+        contain alphanumaric charachters and underscore."),
+      '#value' => $am__field_values['name'],
+      '#weight' => -50,
+    );
+    
+    $form['contact_field_name'] = array(
+      '#type' => 'hidden',
+      '#value' => $am__field_values['name'],
+    );
+    $form['#submit'] = array('contact_field_listfield_update');
+  }
+  else {
+    $form['contact_field_name'] = array(
+      '#type' => 'textfield',
+      '#title' => t("Field name"),
+      '#description' => t("Machine readable name of the field. This should only
+        contain alphanumaric charachters and underscore."),
+      '#required' => TRUE,
+      '#weight' => -50,
+    );
+    $form['#submit'] = array('contact_field_listfield_submit'); 
+  }
   
   $form['contact_field_label'] = array(
     '#type' => 'textfield',
@@ -60,7 +85,7 @@ function contact_field_add_field_option_form() {
       0 => t("Single"),
       1 => t("Multiple"),
     ),
-    '#default_value' => $am__field_values['num_value'],
+    '#default_value' => (!empty($am__field_values['num_value']) ? $am__field_values['num_value'] : 0),
     '#required' => TRUE,
     '#weight' => -48,
   );
@@ -148,13 +173,7 @@ function contact_field_add_field_option_form() {
  */
 function contact_field_option_submit($form, $form_values) {
 	$ss__num_values = $form_values['values']['contact_field_num_value'];
-	if ($ss__num_values) {
-		$ss__field_type = 'checkboxes';
-	}
-	else {
-		$ss__field_type = 'radios';
-	}
-	
+	$ss__field_type = ($ss__num_values) ? 'checkboxes' : 'radios';
 	$ss__field_name = $form_values['values']['contact_field_name'];
   $ss__field_required = $form_values['values']['contact_field_require'];
   $ss__field_enabled = $form_values['values']['contact_field_enabled'];
@@ -189,7 +208,7 @@ function contact_field_option_submit($form, $form_values) {
  */
 function contact_field_option_update($form, $form_values) {
   $ss__field_name = $form_values['values']['contact_field_name'];
-  $ss__field_type = $form_values['values']['field_type'];
+  $ss__field_type = ($ss__num_values) ? 'checkboxes' : 'radios';
   $ss__field_required = $form_values['values']['contact_field_require'];
   $ss__field_enabled = $form_values['values']['contact_field_enabled'];
   $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
@@ -208,7 +227,7 @@ function contact_field_option_update($form, $form_values) {
   }
 
   db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d, 
-    required = %d WHERE field_name = '%s'", serialize($ss__field_settings), 
-    $ss__field_enabled, $ss__field_required, $ss__field_name);
+    required = %d, weight = '%s' WHERE field_name = '%s'", serialize($ss__field_settings), 
+    $ss__field_enabled, $ss__field_required, $ss__field_weight, $ss__field_name);
   drupal_goto('admin/build/contact/manage');
 }

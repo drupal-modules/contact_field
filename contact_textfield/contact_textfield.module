@@ -225,11 +225,11 @@ function contact_field_update($form, $form_values) {
   $ss__field_settings['maxlength'] = $form_values['values']['contact_field_maxlength'];
   $ss__field_settings['field_prefix'] = $form_values['values']['contact_field_prefix_field'];
   $ss__field_settings['field_suffix'] = $form_values['values']['contact_field_suffix_field'];
-  $ss__field_settings['weight'] = $form_values['values']['contact_field_weight'];
+  $ss__field_weight = $form_values['values']['contact_field_weight'];
 
   db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d, 
-    required = %d WHERE field_name = '%s'", serialize($ss__field_settings), 
-    $ss__field_enabled, $ss__field_required, $ss__field_name);
+    required = %d, weight = '%s' WHERE field_name = '%s'", serialize($ss__field_settings), 
+    $ss__field_enabled, $ss__field_required, $ss__field_weight, $ss__field_name);
     
   drupal_set_message($ss__field_settings['title'] ." ". t("updated"));
   drupal_goto('admin/build/contact/manage');
