@@ -32,14 +32,14 @@ function contact_option_info() {
  */
 function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
 	drupal_set_title(t("Configure option field"));
-	$am__field_values = _get_field_values($ss__field);
-	if (!empty($am__field_values['options'])) {
-    foreach ($am__field_values['options'] as $key => $value) {
-      $ss__option .= $key ."|". $value;
-    }
-  }
-  
-  if ($am__field_values['name']) {
+	$form = array();
+	if ($ss__field) {
+  	$am__field_values = _get_field_values($ss__field);
+	  if (!empty($am__field_values['options'])) {
+	    foreach ($am__field_values['options'] as $key => $value) {
+	      $ss__option .= $key ."|". $value;
+	    }
+	  }
     $form['name'] = array(
       '#type' => 'item',
       '#title' => t("Field name"),
@@ -53,7 +53,7 @@ function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
       '#type' => 'hidden',
       '#value' => $am__field_values['name'],
     );
-    $form['#submit'] = array('contact_field_listfield_update');
+    $form['#submit'] = array('contact_field_option_update');
   }
   else {
     $form['contact_field_name'] = array(
@@ -64,7 +64,7 @@ function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
       '#required' => TRUE,
       '#weight' => -50,
     );
-    $form['#submit'] = array('contact_field_listfield_submit'); 
+    $form['#submit'] = array('contact_field_option_submit'); 
   }
   
   $form['contact_field_label'] = array(
@@ -142,7 +142,7 @@ function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
     '#type' => 'textarea',
     '#title' => t("Allowed values"),
     '#description' => t("Add key-value pair in key|value format. Add each pair in separate line."),
-    '#default_value' => (!empty($am__field_values['values']) ? $am__field_values['values'] : ""),
+    '#default_value' => $ss__option,
     '#weight' => -42,
   );
 
@@ -151,7 +151,7 @@ function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
     '#title' => t("Help text"),
     '#description' => t("Help text will appear just beneath the field like this, 
       to help user in filling value in the field."),
-    '#default_value' => (!empty($am__field_values['help']) ? $am__field_values['help'] : ""),
+    '#default_value' => (!empty($am__field_values['description']) ? $am__field_values['description'] : ""),
     '#weight' => -41,
   );
   
@@ -160,7 +160,6 @@ function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
     '#value' => t("Save configuration"),
   );
   
-  $form['#submit'] = array('contact_field_option_submit');
   return $form;
 }
 

@@ -20,12 +20,12 @@ function contact_field_add_field($op, $ss__type = NULL) {
 	if ($op != 'add') {
 		$ss__field_type = _get_field_type($op);
 		switch($ss__field_type) {
-	    case 'text':
+	    case 'textfield':
 	      if (module_exists('contact_textfield')) {
 	        return drupal_get_form('contact_field_add_field_text_form', $op);
 	      }
 	      break;
-	    case 'area':
+	    case 'textarea':
 	      if (module_exists('contact_textfield')) {
 	        return drupal_get_form('contact_field_add_field_textarea_form', $op);
 	      }

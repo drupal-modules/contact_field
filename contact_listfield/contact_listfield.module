@@ -34,15 +34,16 @@ function contact_listfield_info() {
  */
 function contact_field_add_field_listfield_form($form_state, $ss__field = NULL) {
 	drupal_set_title(t("Configure list field"));
-	$am__field_values = _get_field_values($ss__field);
-	
-	if (!empty($am__field_values['options'])) {
-		foreach ($am__field_values['options'] as $key => $value) {
-			$ss__option .= $key ."|". $value;
-		}
-	}
-	
-  if ($am__field_values['name']) {
+	$form = array();
+	echo $ss__field;
+  if ($ss__field) {
+    $am__field_values = _get_field_values($ss__field);
+	  if (!empty($am__field_values['options'])) {
+	    foreach ($am__field_values['options'] as $key => $value) {
+	      $ss__option .= $key ."|". $value;
+	    }
+	  }
+	  
   	$form['name'] = array(
 	    '#type' => 'item',
 	    '#title' => t("Field name"),

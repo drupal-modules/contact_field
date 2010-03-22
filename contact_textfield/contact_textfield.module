@@ -41,10 +41,10 @@ function contact_textfield_info() {
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_text_form($form = NULL, $form_state = NULL, $ss__field = NULL, $edit = FALSE) {
+function contact_field_add_field_text_form($form_state, $ss__field = NULL) {
   drupal_set_title(t("Configure text field"));
   $form = array();
-  if ($ss__field && $edit) {
+  if ($ss__field) {
     $am__field_values = _get_field_values($ss__field);
     $form['#submit'] = array('contact_field_update');
     $form['name'] = array(
@@ -243,22 +243,41 @@ function contact_field_update($form, $form_values) {
  * 
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_textarea_form($form = NULL, $form_state = NULL, $ss__field = NULL, $edit = FALSE) {
+function contact_field_add_field_textarea_form($form_state, $ss__field = NULL) {
 	drupal_set_title(t("Configure text area"));
-	$am__field_values = _get_field_values($ss__field);
-	$form['field_type'] = array(
-    '#type' => 'hidden',
-    '#default_value' => 'textarea',
-  );
-  
-  $form['contact_field_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t("Field name"),
-    '#description' => t("Machine readable name of the field. This should only
-      contain alphanumaric charachters and underscore."),
-    '#required' => TRUE,
-    '#weight' => -50,
-  );
+  $form = array();
+  if ($ss__field) {
+    $am__field_values = _get_field_values($ss__field);
+    $form['#submit'] = array('contact_field_textarea_update');
+    $form['name'] = array(
+      '#type' => 'item',
+      '#title' => t("Field name"),
+      '#value' => $am__field_values['name'],
+      '#description' => t("Field name can not be changed."),
+      '#weight' => -50,
+    );
+    $form['contact_field_name'] = array(
+      '#type' => 'hidden',
+      '#value' => $am__field_values['name'],
+    );
+  }
+  else {
+  	$form['#submit'] = array('contact_field_textarea_submit');
+  	$form['field_type'] = array(
+	    '#type' => 'hidden',
+	    '#default_value' => 'textarea',
+	  );
+	  
+	  $form['contact_field_name'] = array(
+	    '#type' => 'textfield',
+	    '#title' => t("Field name"),
+	    '#description' => t("Machine readable name of the field. This should only
+	      contain alphanumaric charachters and underscore."),
+	    '#required' => TRUE,
+	    '#weight' => -50,
+	  );
+  }
+	
   
   $form['contact_field_label'] = array(
     '#type' => 'textfield',
@@ -322,7 +341,7 @@ function contact_field_add_field_textarea_form($form = NULL, $form_state = NULL,
     '#title' => t("Help text"),
     '#description' => t("Help text will appear just beneath the field like this, 
       to help user in filling value in the field."),
-    '#default_value' => (!empty($am__field_values['help']) ? $am__field_values['help'] : ""),
+    '#default_value' => (!empty($am__field_values['description']) ? $am__field_values['description'] : ""),
     '#weight' => -40,
   );
   
@@ -331,7 +350,6 @@ function contact_field_add_field_textarea_form($form = NULL, $form_state = NULL,
     '#value' => t("Save configuration"),
   );
   
-  $form['#submit'] = array('contact_field_textarea_submit');
 	return $form;
 }
 
@@ -351,6 +369,7 @@ function contact_field_textarea_submit($form, $form_values) {
   $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
   $ss__field_settings['rows'] = $form_values['values']['contact_field_label'];
   $ss__field_settings['cols'] = $form_values['values']['contact_field_label'];
+  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
   $ss__field_weight = $form_values['values']['contact_field_weight'];
 
   db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, '%s')",
@@ -377,11 +396,12 @@ function contact_field_textarea_update($form, $form_values) {
   $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
   $ss__field_settings['rows'] = $form_values['values']['contact_field_label'];
   $ss__field_settings['cols'] = $form_values['values']['contact_field_label'];
+  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
   $ss__field_weight = $form_values['values']['contact_field_weight'];
 
   db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d, 
-    required = %d WHERE field_name = '%s'", serialize($ss__field_settings), 
-    $ss__field_enabled, $ss__field_required, $ss__field_name);
+    required = %d, weight = '%s' WHERE field_name = '%s'", serialize($ss__field_settings), 
+    $ss__field_enabled, $ss__field_required, $ss__field_weight, $ss__field_name);
     
   drupal_set_message($ss__field_settings['title'] ." ". t("updated"));
   drupal_goto('admin/build/contact/manage');
