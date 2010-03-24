@@ -96,7 +96,7 @@ function contact_field_validate($form, $form_state) {
 	$ss__field_exist = db_result(db_query("SELECT field_type FROM {contact_fields} 
     WHERE field_name = '%s'", $form_state['values']['contact_field_name']));
 	if ($ss__field_exist) {
-		form_set_error('contact_field_name', t("A cotact field with the same name already exists."));
+		form_set_error('contact_field_name', t("A contact field with the same name already exists."));
 	}
 }
 
