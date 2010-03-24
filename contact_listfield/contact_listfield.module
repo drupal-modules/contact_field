@@ -35,7 +35,6 @@ function contact_listfield_info() {
 function contact_field_add_field_listfield_form($form_state, $ss__field = NULL) {
 	drupal_set_title(t("Configure list field"));
 	$form = array();
-	echo $ss__field;
   if ($ss__field) {
     $am__field_values = _get_field_values($ss__field);
 	  if (!empty($am__field_values['options'])) {
@@ -153,6 +152,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field = NULL) 
     '#title' => t("Allowed values"),
     '#description' => t("Add key-value pair in key|value format. Add each pair in separate line."),
     '#default_value' => (!empty($ss__option) ? $ss__option : ""),
+    '#required' => TRUE,
     '#weight' => -42,
   );
 
@@ -170,6 +170,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field = NULL) 
     '#value' => t("Save configuration"),
   );
   
+  $form['#validate'] = array('contact_field_validate');  
   return $form;
 }
 

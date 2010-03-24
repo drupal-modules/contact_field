@@ -62,7 +62,7 @@ function contact_field_menu() {
 
 
 /**
- * Implementation of hook_form_FORM_ID_alter
+ * Implementation of hook_form_alter
  * 
  * @param $form
  * @param $form_state
@@ -81,6 +81,24 @@ function contact_field_form_alter(&$form, $form_state, $form_id) {
 }
 
 
+
+
+/**
+ * contact_field_validate
+ * 
+ * Validate the form values against specified criterias
+ * 
+ * @param $form
+ * @param $form_state
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ */
+function contact_field_validate($form, $form_state) {
+	$ss__field_exist = db_result(db_query("SELECT field_type FROM {contact_fields} 
+    WHERE field_name = '%s'", $form_state['values']['contact_field_name']));
+	if ($ss__field_exist) {
+		form_set_error('contact_field_name', t("A cotact field with the same name already exists."));
+	}
+}
 
 /**
  * _get_field_details
@@ -123,6 +141,11 @@ function contact_field_delete_field($ss__field_name) {
 }
 
 
+
+/**
+ * 
+ * @param string $ss__field
+ */
 function contact_field_edit_field($ss__field) {
 	if ($ss__field) {
 	  module_load_include('inc', 'contact_field', 'contact_field_admin');

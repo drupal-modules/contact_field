@@ -143,6 +143,7 @@ function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
     '#title' => t("Allowed values"),
     '#description' => t("Add key-value pair in key|value format. Add each pair in separate line."),
     '#default_value' => $ss__option,
+    '#required' => TRUE,
     '#weight' => -42,
   );
 
@@ -160,6 +161,7 @@ function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
     '#value' => t("Save configuration"),
   );
   
+  $form['#validate'] = array('contact_field_validate');
   return $form;
 }
 

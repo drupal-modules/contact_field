@@ -172,7 +172,8 @@ function contact_field_add_field_text_form($form_state, $ss__field = NULL) {
     '#type' => 'submit',
     '#value' => t("Save configuration"),
   );
-
+  
+  $form['#validate'] = array('contact_field_validate');
   return $form;
 }
 
@@ -350,6 +351,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field = NULL) {
     '#value' => t("Save configuration"),
   );
   
+  $form['#validate'] = array('contact_field_validate');
 	return $form;
 }
 
