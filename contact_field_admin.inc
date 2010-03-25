@@ -80,14 +80,22 @@ function contact_field_list_field() {
   drupal_set_title(t("Manage fields"));
   $output = _get_fields();
   $links = array();
-  foreach ($am__fields as $key => $value) {
-  	$links[] = array(
-  	  'href' => 'admin/build/contact/add/'. $value['type'],
-  	  'title' => t("Add a") ." ". $value['title'],
-  	  'description' => $value['description'],
-  	);
+  if (!empty($am__fields)) {
+  	foreach ($am__fields as $key => $value) {
+	    $links[] = array(
+	      'href' => 'admin/build/contact/add/'. $value['type'],
+	      'title' => t("Add a") ." ". $value['title'],
+	      'description' => $value['description'],
+	    );
+	  }
+	  return $output . theme('links', $links, '');
   }
-  return $output . theme('links', $links, '');
+  else {
+  	drupal_set_message(t("No contact form field module is enabled. Please enable from") 
+      ." ". l(t("module page"), 'admin/build/modules'), 'error');
+  	return $output; 
+  }
+  
 }
 
 
