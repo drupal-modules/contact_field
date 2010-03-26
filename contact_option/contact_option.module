@@ -64,7 +64,8 @@ function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
       '#required' => TRUE,
       '#weight' => -50,
     );
-    $form['#submit'] = array('contact_field_option_submit'); 
+    $form['#submit'] = array('contact_field_option_submit');
+    $form['#validate'] = array('contact_field_validate'); 
   }
   
   $form['contact_field_label'] = array(
@@ -161,7 +162,6 @@ function contact_field_add_field_option_form($form_state, $ss__field = NULL) {
     '#value' => t("Save configuration"),
   );
   
-  $form['#validate'] = array('contact_field_validate');
   return $form;
 }
 

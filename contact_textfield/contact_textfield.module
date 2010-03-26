@@ -62,6 +62,7 @@ function contact_field_add_field_text_form($form_state, $ss__field = NULL) {
   else {
     unset($am__field_values);
     $form['#submit'] = array('contact_field_submit');
+    $form['#validate'] = array('contact_field_validate');
     $form['contact_field_name'] = array(
       '#type' => 'textfield',
       '#title' => t("Field name"),
@@ -173,7 +174,6 @@ function contact_field_add_field_text_form($form_state, $ss__field = NULL) {
     '#value' => t("Save configuration"),
   );
   
-  $form['#validate'] = array('contact_field_validate');
   return $form;
 }
 
@@ -264,6 +264,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field = NULL) {
   }
   else {
   	$form['#submit'] = array('contact_field_textarea_submit');
+  	$form['#validate'] = array('contact_field_validate');
   	$form['field_type'] = array(
 	    '#type' => 'hidden',
 	    '#default_value' => 'textarea',
@@ -351,7 +352,6 @@ function contact_field_add_field_textarea_form($form_state, $ss__field = NULL) {
     '#value' => t("Save configuration"),
   );
   
-  $form['#validate'] = array('contact_field_validate');
 	return $form;
 }
 
