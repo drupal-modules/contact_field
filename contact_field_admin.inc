@@ -76,10 +76,11 @@ function contact_field_add_field($op, $ss__type = NULL) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_list_field() {
-	$am__fields = module_invoke_all('info');
   drupal_set_title(t("Manage fields"));
+	$am__fields = module_invoke_all('info');
   $output = _get_fields();
   $links = array();
+  
   if (!empty($am__fields)) {
   	foreach ($am__fields as $key => $value) {
 	    $links[] = array(
@@ -88,14 +89,13 @@ function contact_field_list_field() {
 	      'description' => $value['description'],
 	    );
 	  }
-	  return $output . theme('links', $links, '');
+	  $output .= theme('links', $links, '');
   }
   else {
-  	drupal_set_message(t("No contact form field module is enabled. Please enable from") 
-      ." ". l(t("module page"), 'admin/build/modules'), 'error');
-  	return $output; 
+  	drupal_set_message(t("No contact form field module is enabled. Please enable from !module", 
+  	 array('!module' => l(t("module page"), 'admin/build/modules'))), 'error');
   }
-  
+  return $output;
 }
 
 
