@@ -28,9 +28,9 @@ function contact_field_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'contact_field_admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
-    'weight' => 50,
+    'weight' => 49,
   );
-
+  
   $item['admin/build/contact/add/%'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'contact_field_add_field',
@@ -234,20 +234,41 @@ function _get_field_type($ss__field_name) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_mail_alter($message) {
-	$am__fields = _get_enabled_fields();
-	$ss__addtional = t("Addtional information") ."\n\r";
-	foreach ($am__fields as $field => $lable) {
-		if (is_array($message['params'][$field])) {
-			$ss__addtional .= $label ."\n\r";
-			foreach ($message['params'][$field] as $key => $value) {
-				$ss__addtional .= $key .": ". $value ."\n\r";
-			}
+	if ($message['id'] == "contact_page_mail") {
+		$am__fields = _get_enabled_fields();
+		if (!variable_get("contact_field_use_template", 0)) {
+	    $ss__addtional = t("Addtional information") ."\n\r";
+	    foreach ($am__fields as $field => $lable) {
+	      if (is_array($message['params'][$field])) {
+	        $ss__addtional .= $label ."\n\r";
+	        foreach ($message['params'][$field] as $key => $value) {
+	          $ss__addtional .= $key .": ". $value ."\n\r";
+	        }
+	      }
+	      else {
+	        $ss__addtional .= $lable .": \t". $message['params'][$field] ."\n\r"; 
+	      }
+	    }
+	    $message['body'][] = "\n\r". $ss__addtional;
 		}
 		else {
-			$ss__addtional .= $lable .": \t". $message['params'][$field] ."\n\r"; 
+		  foreach ($am__fields as $field => $lable) {
+        if (is_array($message['params'][$field])) {
+          foreach ($message['params'][$field] as $key => $value) {
+            $am__value[$field] = $value;
+          }
+        }
+        else {
+          $am__value[$field] = $message['params'][$field]; 
+        }
+      }
+      $am__value['message'] = check_plain($message['body'][1]);
+      $message['body'][1] = t(variable_get("contact_field_message_template", ""), $am__value);
 		}
 	}
-	$message['body'][] = "\n\r". $ss__addtional; 
+	echo "<pre>";
+	print_R($message['body']);
+	echo "</pre>";exit;
 }
 
 
