@@ -266,9 +266,6 @@ function contact_field_mail_alter($message) {
       $message['body'][1] = t(variable_get("contact_field_message_template", ""), $am__value);
 		}
 	}
-	echo "<pre>";
-	print_R($message['body']);
-	echo "</pre>";exit;
 }
 
 
