@@ -67,6 +67,18 @@ function contact_field_schema() {
       ),
 
       'weight' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'length' => 255,
+      ),
+      
+      'core' => array(
+        'type' => 'int',
+        'length' => 1,
+        'default' => 0,
+      ),
+      
+      'field_group' => array(
         'type' => 'varchar',
         'length' => 255,
       ),
@@ -74,4 +86,13 @@ function contact_field_schema() {
     'primary key' => array('field_name'),
   );
   return $schema;
+}
+
+
+
+/**
+ * Implementation of hook_update
+ */
+function contact_field_update_6020() {
+  db_query("ALTER TABLE {contact_fields} ADD core int(1) default 0, ADD field_group varchar(255), MODIFY weight int(11) signed default 0");
 }
