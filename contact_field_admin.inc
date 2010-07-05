@@ -200,11 +200,11 @@ function _get_fields() {
     if ($om__result->field_type == 'fieldset') {
       $row = array(
         $am__settings['title'],
+        drupal_render(form_builder(NULL, $am__weight, $form_state)),
         $om__result->field_name,
         array('data' => t("Standard group")),
         NULL,
         NULL,
-        drupal_render(form_builder(NULL, $am__weight, $form_state)),
         ($om__result->core ? NULL : l(t("Configure"), 'admin/build/contact/'. $om__result->field_name ."/edit")),
         ($om__result->core ? NULL : l(t("Remove"), 'admin/build/contact/'. $om__result->field_name ."/delete")),
       );
@@ -212,24 +212,24 @@ function _get_fields() {
       drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight', 'contact-weight-'. $om__result->field_name);
     }
     else {
-      $am__group['contact_group_'. $om__result->field_name ."_parent"] = array(
-        '#type' => 'select',
-        '#title' => t("Group"),
-        '#multiple' => FALSE,
-        '#parent' => array("parent"),
-        '#options' => _get_contact_group(),
-        '#default_value' => $om__result->field_group ? $om__result->field_group : "",
-        '#attributes' => array('class' => 'contact-group'),
-      );
-      
-      $am__group[$om__result->field_name] = array(
-        '#type' => 'hidden',
-        '#parent' => array($om__result->field_name),
-        '#default_value' => $om__result->field_name,
-      );
-      
-      
-      if ($om__result->field_group != "") {
+      if (module_exists('contact_group')) {
+        $am__group['contact_group_'. $om__result->field_name ."_parent"] = array(
+          '#type' => 'select',
+          '#title' => t("Group"),
+          '#multiple' => FALSE,
+          '#parent' => array("parent"),
+          '#options' => _get_contact_group(),
+          '#default_value' => $om__result->field_group ? $om__result->field_group : "",
+          '#attributes' => array('class' => 'contact-group'),
+        );
+        
+        $am__group[$om__result->field_name] = array(
+          '#type' => 'hidden',
+          '#parent' => array($om__result->field_name),
+          '#default_value' => $om__result->field_name,
+        );
+      }
+      if (module_exists('contact_group') && $om__result->field_group != "") {
         $am__in_group =  array(
           '<div class="indentation">&nbsp;</div>',
           $am__settings['title'] ." $ss__module",
@@ -240,7 +240,6 @@ function _get_fields() {
           $am__settings['title'] ." $ss__module",
         );
       }
-       
       $ss__group_fields = count($am__in_group == 2) ? implode("", $am__in_group) : $am__in_group[0];
        
       $row = array(
@@ -304,8 +303,9 @@ function _get_fields() {
   
   $rows[] = array(
     drupal_render(form_builder($form_id, $form_label, $form_values)),
+    NULL,
     drupal_render(form_builder($form_id, $form_field_name, $form_values)),
-    array('data' => drupal_render(form_builder($form_id, $form_field_type, $form_values)), 'colspan' => 7),
+    array('data' => drupal_render(form_builder($form_id, $form_field_type, $form_values)), 'colspan' => 8),
   );
   
   if (module_exists('contact_group')) {
@@ -351,13 +351,14 @@ function _set_core_fields() {
   $form_id  = 'contact_site_page';
   module_load_include('inc', 'contact', 'contact.pages');
   $form = contact_mail_page();
+  
   $i = -10;
   $am__exclude = array('#token', 'submit', 'copy', 'contact_information');
   foreach ($form as $name => $attribute) {
     if (!in_array($name, $am__exclude) && !empty($attribute['#type'])) {
      $b__exist = db_result(db_query("SELECT field_name FROM {contact_fields} WHERE core = 1 AND field_name = '%s'", $name));
       if (!$b__exist) {
-        $am__settings = array('title' => $attribute['#title']);
+        $am__settings = array('title' => $form[$name]['#title']);
         db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, %d, %d, '%s')", 
           $name, $attribute['#type'], serialize($am__settings), 
           $attribute['#required'], 1, $i, 1, '');
