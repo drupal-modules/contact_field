@@ -94,6 +94,7 @@ function contact_field_form_alter(&$form, $form_state, $form_id) {
     while ($om__result = db_fetch_object($r__result)) {
       $form[$om__result->field_name]['#weight'] = $om__result->weight;
     }
+    
     $r__weight = db_query("SELECT weight FROM {contact_fields}");
     while ($om__weight = db_fetch_object($r__weight)) {
       $am__weight[] = $om__weight->weight;
