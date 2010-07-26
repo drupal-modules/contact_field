@@ -379,7 +379,7 @@ function _set_core_fields() {
  *  @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_display_field() {
-  drupal_set_title(t("Dispaly fields"));
+  drupal_set_title(t("Message template"));
   $form = array();
   $form['contact_field_use_template'] = array(
     '#type' => 'checkbox',
@@ -392,7 +392,7 @@ function contact_field_display_field() {
     '#type' => 'textarea',
     '#title' => t("Message template"),
     '#default_value' => variable_get("contact_field_message_template", ""),
-    '#description' => t("The actual message content will be replace by the content of message template with fields replaced by actual values."),
+    '#description' => t("The actual message content will be replaced by the content of message template with fields replaced by actual values."),
     '#weight' => -9,
   );
   

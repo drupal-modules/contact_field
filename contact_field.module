@@ -306,19 +306,19 @@ function contact_field_mail_alter($message) {
   if ($message['id'] == "contact_page_mail") {
     $am__fields = _get_enabled_fields();
     if (!variable_get("contact_field_use_template", 0)) {
-      $ss__addtional = t("Addtional information") ."\n\r";
-      foreach ($am__fields as $field => $lable) {
-        if (is_array($message['params'][$field])) {
-          $ss__addtional .= $label ."\n\r";
-          foreach ($message['params'][$field] as $key => $value) {
-            $ss__addtional .= $key .": ". $value ."\n\r";
-          }
+      $ss__additional = t("Additional information") ."\n\r";
+      foreach ($am__fields as $type => $field) {
+        $as__title = array_values($field);
+        $as__field = array_keys($field);
+        if (is_array($message['params'][$as__field[0]])) {
+          $ss__value = _get_field_setting($as__field[0], $message['params'][$as__field[0]]);
+          $ss__additional .= $as__title[0].": \t". $ss__value ."\n\r";
         }
         else {
-          $ss__addtional .= $lable .": \t". $message['params'][$field] ."\n\r"; 
+          $ss__additional .= $as__title[0] .": \t". $message['params'][$as__field[0]] ."\n\r"; 
         }
       }
-      $message['body'][] = "\n\r". $ss__addtional;
+      $message['body'][] = "\n\r". $ss__additional;
     }
     else {
       foreach ($am__fields as $field => $lable) {
@@ -346,10 +346,11 @@ function contact_field_mail_alter($message) {
  *  @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_enabled_fields() {
-	$r__result = db_query("SELECT field_name, settings FROM {contact_fields} WHERE  enabled = 1");
+	$r__result = db_query("SELECT field_name, field_type, settings FROM {contact_fields} 
+	  WHERE  enabled = 1 AND core = 0 AND field_type <> 'fieldset'");
 	while ($om__result = db_fetch_object($r__result)) {
 		$am__settings = unserialize($om__result->settings);
-		$am__field[$om__result->field_name] = $am__settings['title'];
+		$am__field[$om__result->field_type][$om__result->field_name] = $am__settings['title'];
 	}
 	return $am__field;
 }
@@ -379,9 +380,11 @@ function _get_contact_field() {
 
 
 
-
+/**
+ * _get_contact_group
+ */
 function _get_contact_group() {
-  $r__result = db_query("SELECT field_name, settings FROM  {contact_fields}  
+  $r__result = db_query("SELECT field_name, settings FROM {contact_fields}  
     WHERE field_type = 'fieldset'");
   $am__group[""] = t("Select");
   while ($om__result = db_fetch_object($r__result)) {
@@ -390,4 +393,28 @@ function _get_contact_group() {
   }
   
   return $am__group;
+}
+
+
+
+/**
+ * _get_field_setting
+ * 
+ * Return human readable values for options and lists
+ * 
+ * @param unknown_type $ss__field_name
+ * @param unknown_type $ss__field_value
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ */
+function _get_field_setting($ss__field_name, $am__field_value) {
+//  $am__option_key = array_keys($am__field_value);
+  $r__result = db_query("SELECT settings FROM {contact_fields} WHERE field_name = '%s'", $ss__field_name);
+  $om__result = db_fetch_object($r__result);
+  $am__settings = unserialize($om__result->settings);
+  foreach ($am__field_value as $value) {
+    if ($value != "" || $value != 0) {
+      $ss__value .= "<li>". $am__settings['options'][$value] ."</li>";
+    }
+  }
+  return drupal_html_to_text("<ul>". $ss__value ."</ul>");
 }
