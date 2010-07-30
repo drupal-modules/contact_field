@@ -173,8 +173,8 @@ function contact_field_list_update($form, $form_values) {
  */
 function _get_fields() {
   _set_core_fields();
-  $header = array(t("Title"), t("Name"), t("Type"), t("Required"),
-    t("Enabled"), t("Weight"), array('data' => t("Operation"), 'colspan' => 2));
+  $header = array(t("Title"), t("Weight"), t("Name"), t("Type"), t("Required"),
+    t("Enabled"), array('data' => t("Operation"), 'colspan' => 2));
   $r__result = db_query("SELECT * FROM {contact_fields} ORDER BY weight ASC");
   $class = "";
   
