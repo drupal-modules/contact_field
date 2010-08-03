@@ -69,7 +69,7 @@ function contact_field_schema() {
       'weight' => array(
         'type' => 'int',
         'unsigned' => FALSE,
-        'length' => 255,
+        'length' => 11,
       ),
       
       'core' => array(

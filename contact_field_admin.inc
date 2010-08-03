@@ -253,6 +253,7 @@ function _get_fields() {
         ($om__result->core ? NULL : l(t("Configure"), 'admin/build/contact/'. $om__result->field_name ."/edit")),
         ($om__result->core ? NULL : l(t("Remove"), 'admin/build/contact/'. $om__result->field_name ."/delete")),
       );
+      drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight');
     }
     
     $rows[] = array(
