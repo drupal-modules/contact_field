@@ -166,7 +166,7 @@ function _get_field_details() {
     );
 
     foreach ($am__settings as $key => $value) {
-      if ($key != 'title') {
+      if ($key != 'title' && $value != "") {
         $am__field[$om__result->field_name]["#". $key] = $value;
       }
     }
