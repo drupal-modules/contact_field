@@ -244,10 +244,10 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
   $form = array();
   if (arg(3) != 'add') {
     $om__field_details = (object) _get_field_values($om__field_details);
-    $form['#submit'] = array('contact_field_update');
+    $form['#submit'] = array('contact_field_textarea_update');
   }
   else {
-    $form['#submit'] = array('contact_field_submit');
+    $form['#submit'] = array('contact_field_textarea_submit');
     $form['#validate'] = array('contact_field_validate');
   }
   
@@ -282,7 +282,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#type' => 'textfield',
     '#title' => t("Rows"),
     '#description' => t("Number of rows. Leave blank for default rows"),
-    '#default_value' => $om__field_details->row,
+    '#default_value' => $om__field_details->rows,
     '#weight' => -48,
   );
 
@@ -290,7 +290,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#type' => 'textfield',
     '#title' => t("Columns"),
     '#description' => t("Number of column. Leave blank for default columns."),
-    '#default_value' => $om__field_details->column,
+    '#default_value' => $om__field_details->cols,
     '#weight' => -47,
   );
 
@@ -358,8 +358,8 @@ function contact_field_textarea_submit($form, $form_values) {
   $ss__field_enabled = $form_values['values']['contact_field_enabled'];
   $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
   $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['rows'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['cols'] = $form_values['values']['contact_field_label'];
+  $ss__field_settings['rows'] = $form_values['values']['contact_field_row'];
+  $ss__field_settings['cols'] = $form_values['values']['contact_field_column'];
   $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
   $ss__field_weight = $form_values['values']['contact_field_weight'];
 
@@ -386,8 +386,8 @@ function contact_field_textarea_update($form, $form_values) {
   $ss__field_enabled = $form_values['values']['contact_field_enabled'];
   $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
   $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['rows'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['cols'] = $form_values['values']['contact_field_label'];
+  $ss__field_settings['rows'] = $form_values['values']['contact_field_row'];
+  $ss__field_settings['cols'] = $form_values['values']['contact_field_column'];
   $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
   $ss__field_weight = $form_values['values']['contact_field_weight'];
 
