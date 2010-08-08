@@ -171,26 +171,26 @@ function _get_field_details() {
       }
     }
   }
-  
-  $r__result = db_query("SELECT * FROM {contact_fields} WHERE enabled = 1 AND 
-    core = 0 AND field_group <> ''");
-  while ($om__result = db_fetch_object($r__result)) {
-    $am__settings = unserialize($om__result->settings);
-    $am__field[$om__result->field_group][$om__result->field_name] = array(
-      '#type' => $om__result->field_type,
-      '#title' => $am__settings['title'],
-      '#parent' => array($om__result->field_name),
-      '#required' => $om__result->required,
-      '#weight' => $om__result->weight,
-    );
-    
-    foreach ($am__settings as $key => $value) {
-      if ($key != 'title') {
-        $am__field[$om__result->field_group][$om__result->field_name]["#". $key] = $value;
+  if (module_exists('contact_field_group')) {
+    $r__result = db_query("SELECT * FROM {contact_fields} WHERE enabled = 1 AND 
+      core = 0 AND (field_group IS NULL OR field_group = '')");
+    while ($om__result = db_fetch_object($r__result)) {
+      $am__settings = unserialize($om__result->settings);
+      $am__field[$om__result->field_group][$om__result->field_name] = array(
+        '#type' => $om__result->field_type,
+        '#title' => $am__settings['title'],
+        '#parent' => array($om__result->field_name),
+        '#required' => $om__result->required,
+        '#weight' => $om__result->weight,
+      );
+      
+      foreach ($am__settings as $key => $value) {
+        if ($key != 'title') {
+          $am__field[$om__result->field_group][$om__result->field_name]["#". $key] = $value;
+        }
       }
     }
   }
-  
   return $am__field;
 }
 
@@ -323,17 +323,24 @@ function contact_field_mail_alter($message) {
       $message['body'][] = "\n". $ss__additional;
     }
     else {
-      foreach ($am__fields as $field => $lable) {
-        if (is_array($message['params'][$field])) {
-          foreach ($message['params'][$field] as $key => $value) {
-            $am__value[$field] = $value;
+      foreach ($am__fields as $type => $field) {
+        $as__title = array_values($field);
+        $as__field = array_keys($field);
+        if (is_array($message['params'][$as__field[0]])) {
+          $ss__value = _get_field_setting($as__field[0], $message['params'][$as__field[0]]);
+          foreach ($message['params'][$as__field[0]] as $key => $value) {
+            $am__value["!". $as__field[0]] = $as__title[0] .": \t". $ss__value;
           }
         }
         else {
-          $am__value[$field] = $message['params'][$field]; 
+          $ss__value = _get_field_setting($as__field[0], $message['params'][$as__field[0]]);
+          $am__value["!". $as__field[0]] = $as__title[0] .": \t". $ss__value; 
         }
       }
       $am__value['message'] = check_plain($message['body'][1]);
+      $am__value['!mail'] = $message['params']['mail']; 
+      $am__value['!subject'] = $message['params']['subject']; 
+      $am__value['!name'] = $message['params']['name']; 
       $message['body'][1] = t(variable_get("contact_field_message_template", ""), $am__value);
     }
   }
@@ -368,12 +375,12 @@ function _get_enabled_fields() {
  */
 function _get_contact_field() {
   $r__result = db_query("SELECT field_name, settings FROM {contact_fields} WHERE  enabled = 1 AND field_type <> 'fieldset'");
-  $ss__value = t("message") .": ". t("The content of message field on the contact form") ."<br />";
+  $ss__value = "message: ". t("The content of message field on the contact form") ."<br />";
   while ($om__result = db_fetch_object($r__result)) {
     if ($om__result->field_name != 'cid' && $om__result->field_name != 'message') {
       $am__settings = unserialize($om__result->settings);
       $ss__description = $am__settings['description']; 
-      $ss__value .= $om__result->field_name .": ". $ss__description ."<br />"; 
+      $ss__value .= "!". $om__result->field_name .": ". $ss__description ."<br />"; 
     }
   }
   
@@ -409,13 +416,22 @@ function _get_contact_group() {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_field_setting($ss__field_name, $am__field_value) {
-  $r__result = db_query("SELECT settings FROM {contact_fields} WHERE field_name = '%s'", $ss__field_name);
+  if (!is_array($am__field_value)) {
+    $am__field_value = array($am__field_value);
+  }
+  $am__field_type = array('textfield', 'textarea');
+  $r__result = db_query("SELECT settings, field_type FROM {contact_fields} WHERE field_name = '%s'", $ss__field_name);
   $om__result = db_fetch_object($r__result);
   $am__settings = unserialize($om__result->settings);
-  foreach ($am__field_value as $value) {
-    if ($value != "" || $value != 0) {
-      $ss__value .= "<li>". $am__settings['options'][$value] ."</li>";
+  if (!in_array($om__result->field_type, $am__field_type)) {
+    foreach ($am__field_value as $value) {
+      if ($value != "" || $value != 0) {
+        $ss__value .= "<li>". $am__settings['options'][$value] ."</li>";
+      }
     }
+    return drupal_html_to_text("<ul>". $ss__value ."</ul>");
   }
-  return drupal_html_to_text("<ul>". $ss__value ."</ul>");
+  else {
+    return $am__field_value[0];
+  }
 }
