@@ -326,18 +326,12 @@ function contact_field_mail_alter($message) {
       foreach ($am__fields as $type => $field) {
         $as__title = array_values($field);
         $as__field = array_keys($field);
-        if (is_array($message['params'][$as__field[0]])) {
-          $ss__value = _get_field_setting($as__field[0], $message['params'][$as__field[0]]);
-          foreach ($message['params'][$as__field[0]] as $key => $value) {
-            $am__value["!". $as__field[0]] = $as__title[0] .": \t". $ss__value;
-          }
-        }
-        else {
-          $ss__value = _get_field_setting($as__field[0], $message['params'][$as__field[0]]);
-          $am__value["!". $as__field[0]] = $as__title[0] .": \t". $ss__value; 
+        for ($i = 0; $i < count($field); $i++) {
+          $ss__value = _get_field_setting($as__field[0], $message['params'][$as__field[$i]]);
+          $am__value["!". $as__field[$i]] = $ss__value;             
         }
       }
-      $am__value['message'] = check_plain($message['body'][1]);
+      $am__value['!message'] = check_plain($message['body'][1]);
       $am__value['!mail'] = $message['params']['mail']; 
       $am__value['!subject'] = $message['params']['subject']; 
       $am__value['!name'] = $message['params']['name']; 
@@ -375,7 +369,7 @@ function _get_enabled_fields() {
  */
 function _get_contact_field() {
   $r__result = db_query("SELECT field_name, settings FROM {contact_fields} WHERE  enabled = 1 AND field_type <> 'fieldset'");
-  $ss__value = "message: ". t("The content of message field on the contact form") ."<br />";
+  $ss__value = "!message: ". t("The content of message field on the contact form") ."<br />";
   while ($om__result = db_fetch_object($r__result)) {
     if ($om__result->field_name != 'cid' && $om__result->field_name != 'message') {
       $am__settings = unserialize($om__result->settings);

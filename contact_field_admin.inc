@@ -409,8 +409,5 @@ function contact_field_display_field() {
     '#description' => t("You can use above fields in the message template. Please note that some of the fields are of contact module."),
     '#value' => _get_contact_field(),
   );
-  
-  drupal_add_tabledrag('contact-field', 'depth', 'parent', 'contact-group');
-  drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight');
   return system_settings_form($form); 
 }
