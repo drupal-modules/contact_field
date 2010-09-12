@@ -215,7 +215,6 @@ function contact_field_option_update($form, $form_values) {
   
   $am__options = explode("\n", $form_values['values']['contact_field_vlaues']);
   foreach ($am__options as $option) {
-    var_dump($am__options);
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
       list($key, $value) = explode("|", $option);
