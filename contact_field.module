@@ -160,7 +160,7 @@ function _get_field_details() {
     $am__settings = unserialize($om__result->settings);
     $am__field[$om__result->field_name] = array(
       '#type' => $om__result->field_type,
-      '#title' => $am__settings['title'],
+      '#title' => t($am__settings['title']),
       '#required' => $om__result->required,
       '#weight' => $om__result->weight,
     );
