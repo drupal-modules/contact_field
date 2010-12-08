@@ -100,15 +100,13 @@ function contact_field_form_alter(&$form, $form_state, $form_id) {
     while ($om__weight = db_fetch_object($r__weight)) {
       $am__weight[] = $om__weight->weight;
     }
-
-    $form['submit']['#weight'] = max($am__weight) + 2;
-    $form['copy']['#weight'] = max($am__weight) + 1;
-    $form['contact_information']['#weight'] = min($am__weight) - 1;
+    if (!empty($am__weight)) {
+      $form['submit']['#weight'] = max($am__weight) + 2;
+	    $form['copy']['#weight'] = max($am__weight) + 1;
+	    $form['contact_information']['#weight'] = min($am__weight) - 1;	
+    }
   }
-  
 }
-
-
 
 
 /**
