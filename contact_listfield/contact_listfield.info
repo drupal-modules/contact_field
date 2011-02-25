@@ -1,4 +1,3 @@
-;$Id$
 name = Contact form list field
 description = Add select boxes on contact form
 package = Contact fields
