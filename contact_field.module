@@ -19,7 +19,7 @@
  */
 function contact_field_menu() {
   $item = array();
-  $item['admin/build/contact/manage'] = array(
+  $item['admin/structure/contact/manage'] = array(
     'type' => MENU_LOCAL_TASK,
     'title' => "Manage fields",
     'title callback' => 't',
@@ -31,7 +31,7 @@ function contact_field_menu() {
     'weight' => 49,
   );
   
-  $item['admin/build/contact/display'] = array(
+  $item['admin/structure/contact/display'] = array(
     'type' => MENU_LOCAL_TASK,
     'title' => "Message template",
     'title callback' => 't',
@@ -43,7 +43,7 @@ function contact_field_menu() {
     'weight' => 50,
   );
   
-  $item['admin/build/contact/add/%'] = array(
+  $item['admin/structure/contact/add/%'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'contact_field_add_field',
     'page arguments' => array(3, 4),
@@ -52,7 +52,7 @@ function contact_field_menu() {
     'file path' => drupal_get_path('module', 'contact_field'),
   );
   
-  $item['admin/build/contact/%/edit'] = array(
+  $item['admin/structure/contact/%/edit'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'contact_field_add_field',
     'page arguments' => array(3),
@@ -61,7 +61,7 @@ function contact_field_menu() {
     'file path' => drupal_get_path('module', 'contact_field'),
   );
   
-  $item['admin/build/contact/%/delete'] = array(
+  $item['admin/structure/contact/%/delete'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'contact_field_delete_field',
     'page arguments' => array(3),
@@ -367,7 +367,7 @@ function _get_enabled_fields() {
 function _get_contact_field() {
   $r__result = db_query("SELECT field_name, settings FROM {contact_fields} WHERE  enabled = 1 AND field_type <> 'fieldset'");
   $ss__value = t("message") .": ". t("The content of message field on the contact form") ."<br />";
-  while ($om__result = db_fetch_object($r__result)) {
+  foreach ($r__result as $om__result) {
     if ($om__result->field_name != 'cid' && $om__result->field_name != 'message') {
       $am__settings = unserialize($om__result->settings);
       $ss__description = $am__settings['description']; 

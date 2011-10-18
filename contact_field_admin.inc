@@ -177,7 +177,7 @@ function _get_fields() {
   $r__result = db_query("SELECT * FROM {contact_fields} ORDER BY weight ASC");
   $class = "";
   
-  while ($om__result = db_fetch_object($r__result)) {
+  foreach($r__result as $om__result) {
     if ($om__result->core) {
       $ss__module = '';
       $class = "menu-disabled";
@@ -347,20 +347,33 @@ function _get_fields() {
  */
 function _set_core_fields() {
   $form_state = array();
+  $form = array();
   $form_id  = 'contact_site_page';
   module_load_include('inc', 'contact', 'contact.pages');
-  $form = contact_mail_page();
+  $form = contact_site_form($form, $form_state);
   
   $i = -10;
   $am__exclude = array('#token', 'submit', 'copy', 'contact_information');
   foreach ($form as $name => $attribute) {
     if (!in_array($name, $am__exclude) && !empty($attribute['#type'])) {
-     $b__exist = db_result(db_query("SELECT field_name FROM {contact_fields} WHERE core = 1 AND field_name = '%s'", $name));
+     $b__exist = db_query("SELECT field_name FROM {contact_fields} WHERE core = 1 AND field_name = ':name'", array(':name' => $name))->fetchAll();
       if (!$b__exist) {
         $am__settings = array('title' => $form[$name]['#title']);
-        db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, %d, %d, '%s')", 
-          $name, $attribute['#type'], serialize($am__settings), 
-          $attribute['#required'], 1, $i, 1, '');
+        db_insert('contact_fields')
+          ->fields(array(
+            'field_name' => $name,
+            'field_type' => $attribute['#type'],
+            'settings' => serialize($am__settings),
+            'required' => $attribute['#required'],
+            'enabled' => 1,
+            'weight' => $i,
+            'core' => 1,
+            'field_group' => '',
+         ));
+//        db_query("INSERT INTO {contact_fields} VALUES(':name', ':type', ':settings', :required, :enabled, ':weight', :core, ':group')", 
+//          array(':name' => $name, ':type' => $attribute['#type'], ':settings' => serialize($am__settings), 
+//          ':required' => $attribute['#required'], ':enabled' => 1, ':weight' => $i, ':core' => 1, ':group' => NULL));
+          
         $i++;
       }
     }
