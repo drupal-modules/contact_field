@@ -91,9 +91,10 @@ function contact_field_add_field($op, $om__field_details = NULL) {
 function contact_field_list_field() {
   $form = array();
   drupal_set_title(t("Manage fields"));
+  $form['#method'] = 'POST';
   $form['contact_field_list'] = array(
     '#type' => 'item',
-    '#value' => _get_fields(),
+    '#markup' => _get_fields(),
     '#description' => t("Only fields from Contact form field module can be edited/deleted here."),
   );
 
@@ -172,11 +173,17 @@ function contact_field_list_update($form, $form_values) {
  */
 function _get_fields() {
   _set_core_fields();
+  $form_id = 'contact_field_list_field';
+  $form['#method'] = 'POST';
+  $form_state = NULL;
   $header = array(t("Title"), t("Name"), t("Type"), t("Required"),
     t("Enabled"), t("Weight"), array('data' => t("Operation"), 'colspan' => 2));
-  $r__result = db_query("SELECT * FROM {contact_fields} ORDER BY weight ASC");
+  $r__result = db_select('contact_fields', 'cf')
+    ->fields('cf')
+    ->orderby('weight', 'ASC')
+    ->execute();
   $class = "";
-  
+
   foreach($r__result as $om__result) {
     if ($om__result->core) {
       $ss__module = '';
@@ -197,9 +204,9 @@ function _get_fields() {
     );
     
     if ($om__result->field_type == 'fieldset') {
-      $row = array(
+      $row[] = array(
         $am__settings['title'],
-        drupal_render(form_builder(NULL, $am__weight, $form_state)),
+        drupal_render(drupal_prepare_form($form_id, $am__weight, $form_state)),
         $om__result->field_name,
         array('data' => t("Standard group")),
         NULL,
@@ -241,10 +248,10 @@ function _get_fields() {
       }
       $ss__group_fields = count($am__in_group == 2) ? implode("", $am__in_group) : $am__in_group[0];
        
-      $row = array(
+      $row[] = array(
         $ss__group_fields,
-        drupal_render(form_builder(NULL, $am__weight, $form_state)) . 
-          drupal_render(form_builder(NULL, $am__group, $form_state)),
+        drupal_render(drupal_prepare_form($form_id, $am__weight, $form_state)) . 
+          drupal_render(drupal_prepare_form($form_id, $am__group, $form_state)),
         $om__result->field_name,
         $om__result->field_type,
         ($om__result->required ? t("Yes") : t("No")),
@@ -301,10 +308,10 @@ function _get_fields() {
   );
   
   $rows[] = array(
-    drupal_render(form_builder($form_id, $form_label, $form_values)),
+    drupal_render(drupal_prepare_form($form_id, $form_label, $form_values)),
     NULL,
-    drupal_render(form_builder($form_id, $form_field_name, $form_values)),
-    array('data' => drupal_render(form_builder($form_id, $form_field_type, $form_values)), 'colspan' => 8),
+    drupal_render(drupal_prepare_form($form_id, $form_field_name, $form_values)),
+    array('data' => drupal_render(drupal_prepare_form($form_id, $form_field_type, $form_values)), 'colspan' => 8),
   );
   
   if (module_exists('contact_group')) {
@@ -324,15 +331,21 @@ function _get_fields() {
     
     $rows[] = array(
       'data' => array(
-        drupal_render(form_builder($form_id, $form_group_label, $form_values)),
-        array('data' => drupal_render(form_builder($form_id, $form_group_name, $form_values)), 'colspan' => 7),
+        drupal_render(drupal_prepare_form($form_id, $form_group_label, $form_values)),
+        array('data' => drupal_render(drupal_prepare_form($form_id, $form_group_name, $form_values)), 'colspan' => 7),
       ),
     );   
   }
   
   drupal_add_tabledrag('contact-field', 'depth', 'parent', 'contact-group', NULL, NULL, TRUE, 1);
   drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight');
-  return theme('table', $header, $rows, array('id' => 'contact-field'));
+  $am__variable = array(
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array('id' => 'contact-field'),
+  );
+  
+  return theme('table', $am__variable);
 }
 
 
@@ -348,12 +361,11 @@ function _get_fields() {
 function _set_core_fields() {
   $form_state = array();
   $form = array();
-  $form_id  = 'contact_site_page';
   module_load_include('inc', 'contact', 'contact.pages');
   $form = contact_site_form($form, $form_state);
   
   $i = -10;
-  $am__exclude = array('#token', 'submit', 'copy', 'contact_information');
+  $am__exclude = array('#token', 'submit', 'copy', 'contact_information', '#attributes');
   foreach ($form as $name => $attribute) {
     if (!in_array($name, $am__exclude) && !empty($attribute['#type'])) {
      $b__exist = db_query("SELECT field_name FROM {contact_fields} WHERE core = 1 AND field_name = ':name'", array(':name' => $name))->fetchAll();
@@ -370,10 +382,6 @@ function _set_core_fields() {
             'core' => 1,
             'field_group' => '',
          ));
-//        db_query("INSERT INTO {contact_fields} VALUES(':name', ':type', ':settings', :required, :enabled, ':weight', :core, ':group')", 
-//          array(':name' => $name, ':type' => $attribute['#type'], ':settings' => serialize($am__settings), 
-//          ':required' => $attribute['#required'], ':enabled' => 1, ':weight' => $i, ':core' => 1, ':group' => NULL));
-          
         $i++;
       }
     }
