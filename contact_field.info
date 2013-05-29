@@ -3,3 +3,4 @@ description = Add custom fields to site wide contact form
 package = Contact fields
 core = 7.x
 dependencies[] = contact
+configure = admin/structure/contact/manage
