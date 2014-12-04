@@ -9,7 +9,7 @@
  */
 
 /**
- * Implementation of hook_menu()
+ * Implementation of hook_menu().
  *
  * @return $item
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
@@ -71,7 +71,7 @@ function contact_field_menu() {
 
 
 /**
- * Implementation of hook_form_alter()
+ * Implementation of hook_form_alter().
  *
  * @param $form
  * @param $form_state
@@ -281,7 +281,7 @@ function _get_field_type($ss_field_name) {
 }
 
 /**
- * Implementation of hook_mail_alter
+ * Implementation of hook_mail_alter().
  *
  * @param unknown_type $message
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>

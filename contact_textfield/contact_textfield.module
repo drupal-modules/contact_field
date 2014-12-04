@@ -168,7 +168,7 @@ function contact_field_add_field_text_form($form_state, $ss_field_name = NULL, $
 }
 
 /**
- * Implementation of hook_submit()
+ * Implementation of hook_submit().
  *
  * @param $form
  * @param $form_values
