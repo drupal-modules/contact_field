@@ -11,9 +11,9 @@
 
 /**
  * contact_textfield_field_info
- *
- * Returns field infomrmation
- *
+ * 
+ * Returns field information
+ * 
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_textfield_info() {
