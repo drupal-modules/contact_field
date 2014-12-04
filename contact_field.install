@@ -73,14 +73,14 @@ function contact_field_schema() {
 
 
 /**
- * Implementation of hook_update
+ * Implementation of hook_update()
  */
 function contact_field_update_6020() {
   db_query("ALTER TABLE {contact_fields} ADD core int(1) default 0");
 }
 
 /**
- * Implementation of hook_update
+ * Implementation of hook_update()
  */
 function contact_field_update_6021() {
   db_query("ALTER TABLE {contact_fields} ADD field_group varchar(255), MODIFY weight int(11) signed default 0");

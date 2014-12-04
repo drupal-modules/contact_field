@@ -11,7 +11,7 @@
 
 /**
  *
- * @param $ss__type
+ * @param $ss_type
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
@@ -19,10 +19,10 @@ function contact_field_add_field($op, $om_field_details = NULL) {
   if ($om_field_details) {
     $om_field_details = unserialize($om_field_details);
   }
-  $ss__field_type = _get_field_type($op);
+  $ss_field_type = _get_field_type($op);
 
   if ($op != 'add') {
-    switch($ss__field_type) {
+    switch ($ss_field_type) {
       case 'textfield':
         if (module_exists('contact_textfield')) {
           return drupal_get_form('contact_field_add_field_text_form', $form_state, $op);
@@ -51,8 +51,8 @@ function contact_field_add_field($op, $om_field_details = NULL) {
         break;
     }
   }
-  else{
-    switch($om_field_details->type) {
+  else {
+    switch ($om_field_details->type) {
       case 'text':
         if (module_exists('contact_textfield')) {
           return drupal_get_form('contact_field_add_field_text_form', $form_state, $om_field_details);
@@ -119,19 +119,19 @@ function contact_field_list_field() {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_list_update($form, $form_values) {
-  $ss__field_label = $form_values['clicked_button']['#post']['field_label'];
-  $ss__field_name = $form_values['clicked_button']['#post']['field_name'];
-  $ss__field_type = $form_values['clicked_button']['#post']['field_type'];
-  $ss__group_label = $form_values['clicked_button']['#post']['field_group_label'];
-  $ss__group_name = $form_values['clicked_button']['#post']['field_group_name'];
+  $ss_field_label = $form_values['clicked_button']['#post']['field_label'];
+  $ss_field_name = $form_values['clicked_button']['#post']['field_name'];
+  $ss_field_type = $form_values['clicked_button']['#post']['field_type'];
+  $ss_group_label = $form_values['clicked_button']['#post']['field_group_label'];
+  $ss_group_name = $form_values['clicked_button']['#post']['field_group_name'];
 
-  if ($ss__field_name && $ss__field_label && $ss__field_type) {
-    $om_field_details = (object) array('name' => "field_". $ss__field_name, 'title' => $ss__field_label, 'type' => $ss__field_type);
+  if ($ss_field_name && $ss_field_label && $ss_field_type) {
+    $om_field_details = (object) array('name' => "field_". $ss_field_name, 'title' => $ss_field_label, 'type' => $ss_field_type);
     drupal_goto("admin/build/contact/add/". serialize($om_field_details));
   }
 
-  elseif ($ss__group_label && $ss__group_name) {
-    $om_field_details = (object) array('name' => "group_". $ss__group_name, 'title' => $ss__group_label, 'type' => 'fieldset');
+  elseif ($ss_group_label && $ss_group_name) {
+    $om_field_details = (object) array('name' => "group_". $ss_group_name, 'title' => $ss_group_label, 'type' => 'fieldset');
     drupal_goto("admin/build/contact/add/". serialize($om_field_details));
   }
 
@@ -182,28 +182,28 @@ function _get_fields() {
   $form_state['programmed'] = TRUE;
   $am_weight = array();
   $am_group = array();
-  $ss__build_id = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
+  $ss_build_id = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
 
   $header = array(t("Title"), t("Name"), t("Type"), t("Required"),
     t("Enabled"), t("Weight"), array('data' => t("Operation"), 'colspan' => 2));
-  $r__result = db_select('contact_fields', 'cf')
+  $r_result = db_select('contact_fields', 'cf')
     ->fields('cf')
     ->orderby('weight', 'ASC')
     ->execute();
   $class = "";
 
-  while($om_result = $r__result->fetchObject()) {
+  while($om_result = $r_result->fetchObject()) {
     if ($om_result->core) {
-      $ss__module = '';
+      $ss_module = '';
       $class = "menu-disabled";
     }
     else {
-      $ss__module = '(Module: Contact form field)';
+      $ss_module = '(Module: Contact form field)';
     }
 
     $am_settings = unserialize($om_result->settings);
 
-    $am_weight['#build_id'] = $ss__build_id;
+    $am_weight['#build_id'] = $ss_build_id;
     $am_weight['contact_weight_'. $om_result->field_name] = array(
       '#type' => 'textfield',
       '#title' => t("Weight"),
@@ -228,7 +228,7 @@ function _get_fields() {
     }
     else {
       if (module_exists('contact_group')) {
-      	$am_group['#build_id'] = $ss__build_id;
+      	$am_group['#build_id'] = $ss_build_id;
         $am_group['contact_group_'. $om_result->field_name ."_parent"] = array(
           '#type' => 'select',
           '#title' => t("Group"),
@@ -248,12 +248,12 @@ function _get_fields() {
       if (module_exists('contact_group') && $om_result->field_group != "") {
         $am_in_group =  array(
           '<div class="indentation">&nbsp;</div>',
-          $am_settings['title'] ." $ss__module",
+          $am_settings['title'] ." $ss_module",
         );
       }
       else {
         $am_in_group =  array(
-          $am_settings['title'] ." $ss__module",
+          $am_settings['title'] ." $ss_module",
         );
       }
       $ss_group_fields = count($am_in_group == 2) ? implode("", $am_in_group) : $am_in_group[0];
@@ -293,10 +293,10 @@ function _get_fields() {
   }
   else {
     drupal_set_message(t("No contact form field module is enabled. Please enable from !module",
-     array('!module' => l(t("module page"), 'admin/build/modules'))), 'error');
+      array('!module' => check_plain(l(t("module page"), 'admin/build/modules'))), 'error'));
   }
 
-  $form_label['#build_id'] = $ss__build_id;
+  $form_label['#build_id'] = $ss_build_id;
   $form_label['field_label'] = array(
     '#type' => 'textfield',
     '#title' => t("New field"),
@@ -304,7 +304,7 @@ function _get_fields() {
     '#description' => t("Label"),
   );
 
-  $form_field_name['#build_id'] = $ss__build_id;
+  $form_field_name['#build_id'] = $ss_build_id;
   $form_field_name['field_name'] = array(
     '#type' => 'textfield',
     '#size' => 30,
@@ -312,7 +312,7 @@ function _get_fields() {
     '#field_prefix' => 'field_'
   );
 
-  $form_field_type['#build_id'] = $ss__build_id;
+  $form_field_type['#build_id'] = $ss_build_id;
   $form_field_type['field_type'] = array(
     '#type' => 'select',
     '#description' => t("Set the field type"),
@@ -335,7 +335,7 @@ function _get_fields() {
   );
 
   if (module_exists('contact_group')) {
-  	$form_group_label['#build_id'] = $ss__build_id;
+  	$form_group_label['#build_id'] = $ss_build_id;
     $form_group_label['field_group_label'] = array(
       '#type' => 'textfield',
       '#title' => t("New group"),
@@ -343,7 +343,7 @@ function _get_fields() {
       '#description' => t("Label"),
     );
 
-    $form_group_name['#build_id'] = $ss__build_id;
+    $form_group_name['#build_id'] = $ss_build_id;
     $form_group_name['field_group_name'] = array(
       '#type' => 'textfield',
       '#size' => 30,
