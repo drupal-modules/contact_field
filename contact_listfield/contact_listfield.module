@@ -1,17 +1,15 @@
 <?php
 
-
 /**
  * @file
- * 
+ *
  * Add select box on contact form
- * 
+ *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 
-
 /**
- * 
+ *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_listfield_info() {
@@ -24,11 +22,8 @@ function contact_listfield_info() {
   );
 }
 
-
-
-
 /**
- * 
+ *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_add_field_listfield_form($form_state, $ss_field_name = NULL, $om_field_details = NULL) {
@@ -47,7 +42,7 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
     $form['#submit'] = array('contact_field_listfield_submit');
     $form['#validate'] = array('contact_field_validate');
   }
-  
+
   $form['name'] = array(
     '#type' => 'item',
     '#title' => t("Field name"),
@@ -56,18 +51,18 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
     '#value' => $om_field_details->name,
     '#weight' => -50,
   );
-  
+
   $form['contact_field_name'] = array(
     '#type' => 'hidden',
     '#value' => $om_field_details->name,
   );
-  
+
   $form['field_type'] = array(
     '#type' => 'hidden',
     '#default_value' => 'select',
   );
-  
-  
+
+
   $form['contact_field_label'] = array(
     '#type' => 'textfield',
     '#title' => t("Field title"),
@@ -76,11 +71,11 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
     '#required' => TRUE,
     '#weight' => -49,
   );
-  
+
   $form['contact_field_num_value'] = array(
     '#type' => 'select',
     '#title' => t("Number of value"),
-    '#description' => t("Number of values allowed to enter. If 'Single' 
+    '#description' => t("Number of values allowed to enter. If 'Single'
       is selected, only one value can be selected."),
     '#options' => array(
       0 => t("Single"),
@@ -90,7 +85,7 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
     '#required' => TRUE,
     '#weight' => -48,
   );
-  
+
   $form['contact_field_prefix'] = array(
     '#type' => 'textfield',
     '#title' => t("Prefix"),
@@ -98,7 +93,7 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
     '#default_value' => $om_field_details->prefix,
     '#weight' => -47,
   );
-  
+
   $form['contact_field_suffix'] = array(
     '#type' => 'textfield',
     '#title' => t("Suffix"),
@@ -106,7 +101,7 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
     '#default_value' => $om_field_details->suffix,
     '#weight' => -46,
   );
-  
+
   $form['contact_field_require'] = array(
     '#type' => 'radios',
     '#title' => t("Required?"),
@@ -123,7 +118,7 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
   $form['contact_field_enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t("Display this field"),
-    '#description' => t("Check this box to make this field available on 
+    '#description' => t("Check this box to make this field available on
       contact form."),
     '#default_value' => $om_field_details->enabled ? $om_field_details->enabled : 1,
     '#weight' => -44,
@@ -133,7 +128,7 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
     '#type' => 'textfield',
     '#title' => t("Weight"),
     '#size' => 10,
-    '#description' => t("Fields with positive weight will sink. 
+    '#description' => t("Fields with positive weight will sink.
       Negative weight will make the field pop up."),
     '#default_value' => $om_field_details->weight ? $om_field_details->weight : 0,
     '#weight' => -43,
@@ -151,25 +146,23 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
   $form['contact_field_help'] = array(
     '#type' => 'textarea',
     '#title' => t("Help text"),
-    '#description' => t("Help text will appear just beneath the field like this, 
+    '#description' => t("Help text will appear just beneath the field like this,
       to help user in filling value in the field."),
     '#default_value' => $om_field_details->description ? $om_field_details->description : "",
     '#weight' => -41,
   );
-  
+
   $form['contact_field_submit'] = array(
     '#type' => 'submit',
     '#value' => t("Save configuration"),
   );
-  
-    
+
+
   return $form;
 }
 
-
-
 /**
- * 
+ *
  * @param $form
  * @param $form_values
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
@@ -203,11 +196,8 @@ function contact_field_listfield_submit($form, $form_values) {
   drupal_goto('admin/build/contact/manage');
 }
 
-
-
-
 /**
- * 
+ *
  * @param unknown_type $form
  * @param unknown_type $form_values
  */
@@ -233,10 +223,10 @@ function contact_field_listfield_update($form, $form_values) {
     }
   }
 
-  db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d, 
-    required = %d, weight = %d WHERE field_name = '%s'", serialize($ss_field_settings), 
+  db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d,
+    required = %d, weight = %d WHERE field_name = '%s'", serialize($ss_field_settings),
     $ss_field_enabled, $ss_field_required, $ss_field_weight, $ss_field_name);
-    
+
   drupal_set_message($ss_field_settings['title'] ." ". t("Updated"));
   drupal_goto('admin/build/contact/manage');
 }

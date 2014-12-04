@@ -8,9 +8,8 @@
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 
-
 /**
- * 
+ *
  * @param $ss_type
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
@@ -48,7 +47,7 @@ function contact_field_add_field($op, $om_field_details = NULL) {
 //        if (module_exists('contact_listfield')) {
 //          return drupal_get_form(contact_group_submit($form_state, $op));
 //        }
-//        break;  
+//        break;
     }
   }
   else{
@@ -72,7 +71,7 @@ function contact_field_add_field($op, $om_field_details = NULL) {
         if (module_exists('contact_listfield')) {
           return drupal_get_form('contact_field_add_field_listfield_form', $form_state, $om_field_details);
         }
-        
+
       case 'fieldset':
         if (module_exists('contact_listfield')) {
           contact_group_submit($form_state, $om_field_details);
@@ -82,9 +81,8 @@ function contact_field_add_field($op, $om_field_details = NULL) {
   }
 }
 
-
 /**
- * 
+ *
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
@@ -103,16 +101,15 @@ function contact_field_list_field() {
     '#value' => t("Save configuration"),
     '#weight' => 50,
   );
-  
+
   $form['#validate'] = array('contact_field_validate');
   $form['#submit'] = array('contact_field_list_update');
   return $form;
 }
 
-
 /**
  * contact_field_list_update
- * 
+ *
  * @param $form
  * @param $form_values
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
@@ -123,21 +120,21 @@ function contact_field_list_update($form, $form_values) {
   $ss_field_type = $form_values['clicked_button']['#post']['field_type'];
   $ss_group_label = $form_values['clicked_button']['#post']['field_group_label'];
   $ss_group_name = $form_values['clicked_button']['#post']['field_group_name'];
-  
+
   if ($ss_field_name && $ss_field_label && $ss_field_type) {
     $om_field_details = (object) array('name' => "field_". $ss_field_name, 'title' => $ss_field_label, 'type' => $ss_field_type);
-    drupal_goto("admin/build/contact/add/". serialize($om_field_details)); 
+    drupal_goto("admin/build/contact/add/". serialize($om_field_details));
   }
-  
+
   elseif ($ss_group_label && $ss_group_name) {
     $om_field_details = (object) array('name' => "group_". $ss_group_name, 'title' => $ss_group_label, 'type' => 'fieldset');
-    drupal_goto("admin/build/contact/add/". serialize($om_field_details)); 
+    drupal_goto("admin/build/contact/add/". serialize($om_field_details));
   }
-  
+
   else {
     $am_weight = preg_grep("/^(contact_weight_)/", array_keys($form_values['clicked_button']['#post']));
     $am_group = preg_grep("/^(contact_group_)/", array_keys($form_values['clicked_button']['#post']));
-    
+
     if (!empty($am_weight)) {
       foreach ($am_weight as $key => $value) {
         $am_field = preg_split("/^(contact_weight_)/", $value, -1, PREG_SPLIT_NO_EMPTY);
@@ -147,7 +144,7 @@ function contact_field_list_update($form, $form_values) {
         }
       }
     }
-    
+
     if (!empty($am_group)) {
       foreach ($am_group as $key => $value) {
         $am_field = preg_split("/^(contact_group_)/", $value, -1, PREG_SPLIT_NO_EMPTY);
@@ -159,8 +156,6 @@ function contact_field_list_update($form, $form_values) {
     }
   }
 }
-
-
 
 /**
  * _get_fields
@@ -176,7 +171,7 @@ function _get_fields() {
     t("Enabled"), array('data' => t("Operation"), 'colspan' => 2));
   $r_result = db_query("SELECT * FROM {contact_fields} ORDER BY weight ASC");
   $class = "";
-  
+
   while ($om_result = db_fetch_object($r_result)) {
     if ($om_result->core) {
       $ss_module = '';
@@ -185,7 +180,7 @@ function _get_fields() {
     else {
       $ss_module = '(Module: Contact form field)';
     }
-    
+
     $am_settings = unserialize($om_result->settings);
 
     $am_weight['contact_weight_'. $om_result->field_name] = array(
@@ -195,7 +190,7 @@ function _get_fields() {
       '#default_value' => $om_result->weight,
       '#attributes' => array('class' => 'contact-weight'),
     );
-    
+
     if ($om_result->field_type == 'fieldset') {
       $row = array(
         $am_settings['title'],
@@ -221,7 +216,7 @@ function _get_fields() {
           '#default_value' => $om_result->field_group ? $om_result->field_group : "",
           '#attributes' => array('class' => 'contact-group'),
         );
-        
+
         $am_group[$om_result->field_name] = array(
           '#type' => 'hidden',
           '#parent' => array($om_result->field_name),
@@ -240,10 +235,10 @@ function _get_fields() {
         );
       }
       $ss_group_fields = count($am_in_group == 2) ? implode("", $am_in_group) : $am_in_group[0];
-       
+
       $row = array(
         $ss_group_fields,
-        drupal_render(form_builder(NULL, $am_weight, $form_state)) . 
+        drupal_render(form_builder(NULL, $am_weight, $form_state)) .
           drupal_render(form_builder(NULL, $am_group, $form_state)),
         $om_result->field_name,
         $om_result->field_type,
@@ -254,16 +249,16 @@ function _get_fields() {
       );
       drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight');
     }
-    
+
     $rows[] = array(
       'id' => 'contact-field',
       'data' => $row,
       'class' => 'draggable '. $class,
     );
-    
+
     unset($class, $am_weight, $am_group);
   }
-  
+
   //Add fields
   $am_fields = module_invoke_all('info');
   $am_field_type[0] = "-- ". t("Field type") ." --";
@@ -276,38 +271,38 @@ function _get_fields() {
     drupal_set_message(t("No contact form field module is enabled. Please enable from !module",
      array('!module' => l(t("module page"), 'admin/build/modules'))), 'error');
   }
-  
+
   $form_label['field_label'] = array(
     '#type' => 'textfield',
     '#title' => t("New field"),
     '#size' => 30,
     '#description' => t("Label"),
   );
-  
+
   $form_field_name['field_name'] = array(
     '#type' => 'textfield',
     '#size' => 30,
     '#description' => t("Field name (a-z, 0-9, _)"),
     '#field_prefix' => 'field_'
   );
-  
+
   $form_field_type['field_type'] = array(
     '#type' => 'select',
     '#description' => t("Set the field type"),
     '#options' => $am_field_type,
   );
-  
+
   $rows[] = array(
     array('data' => t("Add"), 'colspan' => 8, 'class' => 'region'),
   );
-  
+
   $rows[] = array(
     drupal_render(form_builder($form_id, $form_label, $form_values)),
     NULL,
     drupal_render(form_builder($form_id, $form_field_name, $form_values)),
     array('data' => drupal_render(form_builder($form_id, $form_field_type, $form_values)), 'colspan' => 8),
   );
-  
+
   if (module_exists('contact_group')) {
     $form_group_label['field_group_label'] = array(
       '#type' => 'textfield',
@@ -315,28 +310,26 @@ function _get_fields() {
       '#size' => 30,
       '#description' => t("Label"),
     );
-    
+
     $form_group_name['field_group_name'] = array(
       '#type' => 'textfield',
       '#size' => 30,
       '#description' => t("Group name (a-z, 0-9, _)"),
       '#field_prefix' => 'group_'
     );
-    
+
     $rows[] = array(
       'data' => array(
         drupal_render(form_builder($form_id, $form_group_label, $form_values)),
         array('data' => drupal_render(form_builder($form_id, $form_group_name, $form_values)), 'colspan' => 7),
       ),
-    );   
+    );
   }
-  
+
   drupal_add_tabledrag('contact-field', 'depth', 'parent', 'contact-group', NULL, NULL, TRUE, 1);
   drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight');
   return theme('table', $header, $rows, array('id' => 'contact-field'));
 }
-
-
 
 
 /**
@@ -351,7 +344,7 @@ function _set_core_fields() {
   $form_id  = 'contact_site_page';
   module_load_include('inc', 'contact', 'contact.pages');
   $form = contact_mail_page();
-  
+
   $i = -10;
   $am_exclude = array('#token', 'submit', 'copy', 'contact_information');
   foreach ($form as $name => $attribute) {
@@ -359,8 +352,8 @@ function _set_core_fields() {
      $b_exist = db_result(db_query("SELECT field_name FROM {contact_fields} WHERE core = 1 AND field_name = '%s'", $name));
       if (!$b_exist) {
         $am_settings = array('title' => $form[$name]['#title']);
-        db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, %d, %d, '%s')", 
-          $name, $attribute['#type'], serialize($am_settings), 
+        db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, %d, %d, '%s')",
+          $name, $attribute['#type'], serialize($am_settings),
           $attribute['#required'], 1, $i, 1, '');
         $i++;
       }
@@ -368,14 +361,11 @@ function _set_core_fields() {
   }
 }
 
-
-
-
 /**
  * contact_field_list_field
- * 
+ *
  *  Return field display template
- *  
+ *
  *  @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_display_field() {
@@ -387,7 +377,7 @@ function contact_field_display_field() {
     '#default_value' => variable_get("contact_field_use_template", 0),
     '#weight' => -10,
   );
-  
+
   $form['contact_field_message_template'] = array(
     '#type' => 'textarea',
     '#title' => t("Message template"),
@@ -395,18 +385,18 @@ function contact_field_display_field() {
     '#description' => t("The actual message content will be replaced by the content of message template with fields replaced by actual values."),
     '#weight' => -9,
   );
-  
+
   $form['contact_field_token'] = array(
     '#type' => 'fieldset',
     '#title' => t("Available fields"),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
-  
+
   $form['contact_field_token']['contact_field_lit'] = array(
     '#type' => 'item',
     '#description' => t("You can use above fields in the message template. Please note that some of the fields are of contact module."),
     '#value' => _get_contact_field(),
   );
-  return system_settings_form($form); 
+  return system_settings_form($form);
 }

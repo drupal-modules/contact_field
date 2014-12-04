@@ -31,7 +31,6 @@ function contact_textfield_info() {
   );
 }
 
-
 /**
  * contact_field_add_field_text_form
  *
@@ -59,7 +58,7 @@ function contact_field_add_field_text_form($form_state, $ss_field_name = NULL, $
     '#description' => t("Field name can not be changed."),
     '#weight' => -50,
   );
-  
+
   $form['contact_field_name'] = array(
     '#type' => 'hidden',
     '#value' => $om_field_details->name,
@@ -160,7 +159,6 @@ function contact_field_add_field_text_form($form_state, $ss_field_name = NULL, $
     '#weight' => -40,
   );
 
-
   $form['contact_field_submit'] = array(
     '#type' => 'submit',
     '#value' => t("Save configuration"),
@@ -168,9 +166,6 @@ function contact_field_add_field_text_form($form_state, $ss_field_name = NULL, $
 
   return $form;
 }
-
-
-
 
 /**
  * Implementation of hook_submit
@@ -201,7 +196,6 @@ function contact_field_submit($form, $form_values) {
   drupal_goto('admin/build/contact/manage');
 }
 
-
 /**
  *
  * @param unknown_type $form
@@ -230,7 +224,6 @@ function contact_field_update($form, $form_values) {
   drupal_goto('admin/build/contact/manage');
 }
 
-
 /**
  * contact_field_add_field_textarea_form
  *
@@ -249,7 +242,7 @@ function contact_field_add_field_textarea_form($form_state, $ss_field_name = NUL
     $form['#submit'] = array('contact_field_textarea_submit');
     $form['#validate'] = array('contact_field_validate');
   }
-  
+
   $form['name'] = array(
     '#type' => 'item',
     '#title' => t("Field name"),
@@ -257,12 +250,12 @@ function contact_field_add_field_textarea_form($form_state, $ss_field_name = NUL
     '#description' => t("Field name can not be changed."),
     '#weight' => -50,
   );
-  
+
   $form['contact_field_name'] = array(
     '#type' => 'hidden',
     '#value' => $om_field_details->name,
   );
-  
+
   $form['field_type'] = array(
     '#type' => 'hidden',
     '#default_value' => 'textarea',
@@ -342,8 +335,6 @@ function contact_field_add_field_textarea_form($form_state, $ss_field_name = NUL
   return $form;
 }
 
-
-
 /**
  *
  * @param unknown_type $form
@@ -368,9 +359,6 @@ function contact_field_textarea_submit($form, $form_values) {
   drupal_set_message($ss_field_settings['title'] ." ". t("created"));
   drupal_goto('admin/build/contact/manage');
 }
-
-
-
 
 /**
  *

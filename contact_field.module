@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @file
  *
@@ -8,8 +7,6 @@
  *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-
-
 
 /**
  * Implementation of hook_menu
@@ -30,7 +27,7 @@ function contact_field_menu() {
     'file path' => drupal_get_path('module', 'contact_field'),
     'weight' => 49,
   );
-  
+
   $item['admin/build/contact/display'] = array(
     'type' => MENU_LOCAL_TASK,
     'title' => "Message template",
@@ -42,7 +39,7 @@ function contact_field_menu() {
     'file path' => drupal_get_path('module', 'contact_field'),
     'weight' => 50,
   );
-  
+
   $item['admin/build/contact/add/%'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'contact_field_add_field',
@@ -51,7 +48,7 @@ function contact_field_menu() {
     'file' => 'contact_field_admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
   );
-  
+
   $item['admin/build/contact/%/edit'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'contact_field_add_field',
@@ -60,7 +57,7 @@ function contact_field_menu() {
     'file' => 'contact_field_admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
   );
-  
+
   $item['admin/build/contact/%/delete'] = array(
     'type' => MENU_CALLBACK,
     'page callback' => 'contact_field_delete_field',
@@ -94,7 +91,7 @@ function contact_field_form_alter(&$form, $form_state, $form_id) {
     while ($om_result = db_fetch_object($r_result)) {
       $form[$om_result->field_name]['#weight'] = $om_result->weight;
     }
-    
+
     $r_weight = db_query("SELECT weight FROM {contact_fields}");
     while ($om_weight = db_fetch_object($r_weight)) {
       $am_weight[] = $om_weight->weight;
@@ -106,7 +103,6 @@ function contact_field_form_alter(&$form, $form_state, $form_id) {
     }
   }
 }
-
 
 /**
  * contact_field_validate
@@ -123,26 +119,25 @@ function contact_field_validate($form, $form_state) {
   $ss_field_type = $form_state['clicked_button']['#post']['field_type'];
   $ss_group_label = $form_state['clicked_button']['#post']['field_group_label'];
   $ss_group_name = $form_state['clicked_button']['#post']['field_group_name'];
-  
+
   if ($ss_field_lable && empty($ss_field_name)) {
     form_set_error('field_name', t("Please set a unique field name."));
   }
-  
+
   if ($ss_field_lable && $ss_field_name && empty($ss_field_type)) {
     form_set_error('field_type', t("Please select a field type."));
   }
-  
+
   if ($ss_group_label && empty($ss_group_name)) {
     form_set_error('field_group_name', t("Please set a group name."));
   }
-  
+
   $ss_field_exist = db_result(db_query("SELECT field_type FROM {contact_fields}
     WHERE field_name = '%s'", $form_state['clicked_button']['#post']['field_name']));
   if ($ss_field_exist) {
     form_set_error('contact_field_name', t("A contact field with the same name already exists."));
   }
 }
-
 
 /**
  * _get_field_details
@@ -180,7 +175,7 @@ function _get_field_details() {
         '#required' => $om_result->required,
         '#weight' => $om_result->weight,
       );
-      
+
       foreach ($am_settings as $key => $value) {
         if ($key != 'title') {
           $am_field[$om_result->field_group][$om_result->field_name]["#". $key] = $value;
@@ -190,8 +185,6 @@ function _get_field_details() {
   }
   return $am_field;
 }
-
-
 
 /**
  * contact_field_delete_field
@@ -205,10 +198,8 @@ function contact_field_delete_field($ss_field_name) {
     db_query("DELETE FROM {contact_fields} WHERE field_name = '%s'", $ss_field_name);
     drupal_goto("admin/build/contact/manage");
   }
-  
+
 }
-
-
 
 /**
  * 
@@ -225,7 +216,6 @@ function contact_field_delete_field($ss_field_name) {
 //    }
 //  }
 //}
-
 
 /**
  * _get_field_values
@@ -254,8 +244,6 @@ function _get_field_values($ss_field) {
   }
 }
 
-
-
 /**
  * contact_field_filter_xss
  * 
@@ -268,7 +256,6 @@ function contact_field_filter_xss($ss_string) {
   return filter_xss($ss_string, _contact_field_allowed_tags());
 }
 
-
 /**
  * _contact_field_allowed_tags
  * 
@@ -279,7 +266,6 @@ function contact_field_filter_xss($ss_string) {
 function _contact_field_allowed_tags() {
   return array('a', 'b', 'big',  'code', 'del', 'em', 'i', 'ins',  'pre', 'q', 'small', 'span', 'strong', 'sub', 'sup', 'tt', 'ol', 'ul', 'li', 'p', 'br', 'img');
 }
-
 
 /**
  * _get_field_type
@@ -293,7 +279,6 @@ function _get_field_type($ss_field_name) {
   return db_result(db_query("SELECT field_type FROM {contact_fields} 
    WHERE field_name = '%s'", $ss_field_name));
 }
-
 
 /**
  * Implementation of hook_mail_alter
@@ -337,7 +322,6 @@ function contact_field_mail_alter($message) {
   }
 }
 
-
 /**
  * _get_enabled_fields
  * 
@@ -354,8 +338,6 @@ function _get_enabled_fields() {
   }
   return $am_field;
 }
-
-
 
 /**
  * _get_contact_field
@@ -374,11 +356,9 @@ function _get_contact_field() {
       $ss_value .= "!". $om_result->field_name .": ". $ss_description ."<br />"; 
     }
   }
-  
+
   return $ss_value;
 }
-
-
 
 /**
  * _get_contact_group
@@ -391,11 +371,9 @@ function _get_contact_group() {
     $am_settings = unserialize($om_result->settings);
     $am_group[$om_result->field_name] = $am_settings['title'];
   }
-  
+
   return $am_group;
 }
-
-
 
 /**
  * _get_field_setting
