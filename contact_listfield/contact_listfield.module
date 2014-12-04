@@ -52,7 +52,7 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
     '#type' => 'item',
     '#title' => t("Field name"),
     '#description' => t("Machine readable name of the field. This should only
-      contain alphanumaric charachters and underscore."),
+      contain alphanumeric characters and underscore."),
     '#value' => $om_field_details->name,
     '#weight' => -50,
   );
