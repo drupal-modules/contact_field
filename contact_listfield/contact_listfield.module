@@ -134,7 +134,7 @@ function contact_field_add_field_listfield_form($form_state, $ss_field_name = NU
     '#weight' => -43,
   );
 
-  $form['contact_field_vlaues'] = array(
+  $form['contact_field_values'] = array(
     '#type' => 'textarea',
     '#title' => t("Allowed values"),
     '#description' => t("Add key-value pair in key|value format. Add each pair in separate line."),
@@ -180,7 +180,7 @@ function contact_field_listfield_submit($form, $form_values) {
   $ss_field_settings['num_value'] = $ss_num_values;
   $ss_field_weight = $form_values['values']['contact_field_weight'];
   $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
-  $am_options = explode("\n", $form_values['values']['contact_field_vlaues']);
+  $am_options = explode("\n", $form_values['values']['contact_field_values']);
   foreach ($am_options as $option) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
@@ -214,7 +214,7 @@ function contact_field_listfield_update($form, $form_values) {
   $ss_field_settings['num_value'] = $ss_num_values;
   $ss_field_weight = $form_values['values']['contact_field_weight'];
   $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
-  $am_options = explode("\n", $form_values['values']['contact_field_vlaues']);
+  $am_options = explode("\n", $form_values['values']['contact_field_values']);
   foreach ($am_options as $option) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
