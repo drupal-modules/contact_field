@@ -15,13 +15,13 @@
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_listfield_info() {
-	return array(
-	  'select' => array(
-	    'type' => 'list',
-	    'title' => t("List"),
-	    'description' => t("Add select box on contact form"),
-	  ),
-	);
+  return array(
+    'select' => array(
+      'type' => 'list',
+      'title' => t("List"),
+      'description' => t("Add select box on contact form"),
+    ),
+  );
 }
 
 
@@ -32,8 +32,8 @@ function contact_listfield_info() {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_add_field_listfield_form($form_state, $ss__field_name = NULL, $om__field_details = NULL) {
-	drupal_set_title(t("Configure list field"));
-	$form = array();
+  drupal_set_title(t("Configure list field"));
+  $form = array();
   if (arg(3) != 'add') {
     $om__field_details = (object) _get_field_values($om__field_details);
     if (!empty($om__field_details->options)) {
@@ -177,7 +177,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
 function contact_field_listfield_submit($form, $form_values) {
   $ss__num_values = $form_values['values']['contact_field_num_value'];
   $ss__field_settings['multiple'] = ($ss__num_values) ? TRUE : FALSE;
-	$ss__field_name = $form_values['values']['contact_field_name'];
+  $ss__field_name = $form_values['values']['contact_field_name'];
   $ss__field_type = $form_values['values']['field_type'];
   $ss__field_required = $form_values['values']['contact_field_require'];
   $ss__field_enabled = $form_values['values']['contact_field_enabled'];
@@ -212,7 +212,7 @@ function contact_field_listfield_submit($form, $form_values) {
  * @param unknown_type $form_values
  */
 function contact_field_listfield_update($form, $form_values) {
-	$ss__num_values = $form_values['values']['contact_field_num_value'];
+  $ss__num_values = $form_values['values']['contact_field_num_value'];
   $ss__field_settings['multiple'] = ($ss__num_values) ? TRUE : FALSE;
   $ss__field_name = $form_values['values']['contact_field_name'];
   $ss__field_type = $form_values['values']['field_type'];

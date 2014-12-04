@@ -17,18 +17,18 @@
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_textfield_info() {
-	return array(
-	  'textfield' => array(
-	    'type' => 'text',
-	    'title' => t("Text field"),
-	    'description' => t("Add a text box on contact form")
-	  ),
-	  'textarea' => array(
-	    'type' => 'area',
-	    'title' => t("Textarea"),
-	    'description' => t("Add a text area on contact form"),
-	  ),
-	);
+  return array(
+    'textfield' => array(
+      'type' => 'text',
+      'title' => t("Text field"),
+      'description' => t("Add a text box on contact form")
+    ),
+    'textarea' => array(
+      'type' => 'area',
+      'title' => t("Textarea"),
+      'description' => t("Add a text area on contact form"),
+    ),
+  );
 }
 
 

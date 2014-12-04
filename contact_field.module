@@ -101,8 +101,8 @@ function contact_field_form_alter(&$form, $form_state, $form_id) {
     }
     if (!empty($am__weight)) {
       $form['submit']['#weight'] = max($am__weight) + 2;
-	    $form['copy']['#weight'] = max($am__weight) + 1;
-	    $form['contact_information']['#weight'] = min($am__weight) - 1;	
+      $form['copy']['#weight'] = max($am__weight) + 1;
+      $form['contact_information']['#weight'] = min($am__weight) - 1; 
     }
   }
 }
@@ -201,11 +201,11 @@ function _get_field_details() {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_delete_field($ss__field_name) {
-	if ($ss__field_name) {
-		db_query("DELETE FROM {contact_fields} WHERE field_name = '%s'", $ss__field_name);
-		drupal_goto("admin/build/contact/manage");
-	}
-	
+  if ($ss__field_name) {
+    db_query("DELETE FROM {contact_fields} WHERE field_name = '%s'", $ss__field_name);
+    drupal_goto("admin/build/contact/manage");
+  }
+  
 }
 
 
@@ -215,15 +215,15 @@ function contact_field_delete_field($ss__field_name) {
  * @param string $ss__field
  */
 //function contact_field_edit_field($ss__field) {
-//	if ($ss__field) {
-//	  module_load_include('inc', 'contact_field', 'contact_field_admin');
-//		$ss__field_type = db_result(db_query("SELECT field_type FROM {contact_fields} 
-//	    WHERE field_name = '%s'", $ss__field));
-//	  switch($ss__field_type) {
-//	    case 'textfield':
-//	      return drupal_get_form('contact_field_add_field_text_form', $form_state, $ss__field, TRUE);
-//	  }
-//	}
+//  if ($ss__field) {
+//    module_load_include('inc', 'contact_field', 'contact_field_admin');
+//    $ss__field_type = db_result(db_query("SELECT field_type FROM {contact_fields} 
+//      WHERE field_name = '%s'", $ss__field));
+//    switch($ss__field_type) {
+//      case 'textfield':
+//        return drupal_get_form('contact_field_add_field_text_form', $form_state, $ss__field, TRUE);
+//    }
+//  }
 //}
 
 
@@ -236,22 +236,22 @@ function contact_field_delete_field($ss__field_name) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_field_values($ss__field) {
-	if ($ss__field) {
-		$r__result_field = db_query("SELECT * FROM {contact_fields} WHERE 
-		  field_name = '%s'", $ss__field);
-		while ($om__result_field = db_fetch_object($r__result_field)) {
-			$am__field = unserialize($om__result_field->settings);
-			$am__field_value['name'] = $om__result_field->field_name;
-			$am__field_value['title'] = $am__field['title'];
-			$am__field_value['weight'] = $om__result_field->weight;
-			$am__field_value['required'] = $om__result_field->required;
-			$am__field_value['enabled'] = $om__result_field->enabled;
-			foreach ($am__field as $key => $value) {
-				$am__field_value[$key] = $value;
-			}
-		}
-		return $am__field_value;
-	}
+  if ($ss__field) {
+    $r__result_field = db_query("SELECT * FROM {contact_fields} WHERE 
+      field_name = '%s'", $ss__field);
+    while ($om__result_field = db_fetch_object($r__result_field)) {
+      $am__field = unserialize($om__result_field->settings);
+      $am__field_value['name'] = $om__result_field->field_name;
+      $am__field_value['title'] = $am__field['title'];
+      $am__field_value['weight'] = $om__result_field->weight;
+      $am__field_value['required'] = $om__result_field->required;
+      $am__field_value['enabled'] = $om__result_field->enabled;
+      foreach ($am__field as $key => $value) {
+        $am__field_value[$key] = $value;
+      }
+    }
+    return $am__field_value;
+  }
 }
 
 
@@ -265,7 +265,7 @@ function _get_field_values($ss__field) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_filter_xss($ss__string) {
-	return filter_xss($ss__string, _contact_field_allowed_tags());
+  return filter_xss($ss__string, _contact_field_allowed_tags());
 }
 
 
@@ -277,7 +277,7 @@ function contact_field_filter_xss($ss__string) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _contact_field_allowed_tags() {
-	return array('a', 'b', 'big',  'code', 'del', 'em', 'i', 'ins',  'pre', 'q', 'small', 'span', 'strong', 'sub', 'sup', 'tt', 'ol', 'ul', 'li', 'p', 'br', 'img');
+  return array('a', 'b', 'big',  'code', 'del', 'em', 'i', 'ins',  'pre', 'q', 'small', 'span', 'strong', 'sub', 'sup', 'tt', 'ol', 'ul', 'li', 'p', 'br', 'img');
 }
 
 
@@ -290,8 +290,8 @@ function _contact_field_allowed_tags() {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_field_type($ss__field_name) {
-	return db_result(db_query("SELECT field_type FROM {contact_fields} 
-	 WHERE field_name = '%s'", $ss__field_name));
+  return db_result(db_query("SELECT field_type FROM {contact_fields} 
+   WHERE field_name = '%s'", $ss__field_name));
 }
 
 
@@ -346,13 +346,13 @@ function contact_field_mail_alter($message) {
  *  @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_enabled_fields() {
-	$r__result = db_query("SELECT field_name, field_type, settings FROM {contact_fields} 
-	  WHERE  enabled = 1 AND core = 0 AND field_type <> 'fieldset'");
-	while ($om__result = db_fetch_object($r__result)) {
-		$am__settings = unserialize($om__result->settings);
-		$am__field[$om__result->field_type][$om__result->field_name] = $am__settings['title'];
-	}
-	return $am__field;
+  $r__result = db_query("SELECT field_name, field_type, settings FROM {contact_fields} 
+    WHERE  enabled = 1 AND core = 0 AND field_type <> 'fieldset'");
+  while ($om__result = db_fetch_object($r__result)) {
+    $am__settings = unserialize($om__result->settings);
+    $am__field[$om__result->field_type][$om__result->field_name] = $am__settings['title'];
+  }
+  return $am__field;
 }
 
 

@@ -14,13 +14,13 @@
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_option_info() {
-	return array(
-	  'option' => array(
-	    'type' => 'option',
-	    'title' => t("Radio/Checkbox"),
-	    'description' => t("Add opiton field on contact form"),
-	  ),
-	);
+  return array(
+    'option' => array(
+      'type' => 'option',
+      'title' => t("Radio/Checkbox"),
+      'description' => t("Add opiton field on contact form"),
+    ),
+  );
 }
 
 
@@ -30,9 +30,9 @@ function contact_option_info() {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_add_field_option_form($form_state, $ss__field_name = NULL, $om__field_details = NULL) {
-	drupal_set_title(t("Configure option field"));
-	$form = array();
-	if (arg(3) != 'add') {
+  drupal_set_title(t("Configure option field"));
+  $form = array();
+  if (arg(3) != 'add') {
     $om__field_details = (object) _get_field_values($om__field_details);
     if (!empty($om__field_details->options)) {
       foreach ($om__field_details->options as $key => $value) {
