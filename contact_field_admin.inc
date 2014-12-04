@@ -236,10 +236,12 @@ function _get_fields() {
       }
       $ss_group_fields = count($am_in_group == 2) ? implode("", $am_in_group) : $am_in_group[0];
 
+      $form_part_weight = form_builder(NULL, $am_weight, $form_state);
+      $form_part_group = form_builder(NULL, $am_group, $form_state);
       $row = array(
         $ss_group_fields,
-        drupal_render(form_builder(NULL, $am_weight, $form_state)) .
-          drupal_render(form_builder(NULL, $am_group, $form_state)),
+        drupal_render($form_part_weight) .
+          drupal_render($form_part_group),
         $om_result->field_name,
         $om_result->field_type,
         ($om_result->required ? t("Yes") : t("No")),
@@ -296,11 +298,15 @@ function _get_fields() {
     array('data' => t("Add"), 'colspan' => 8, 'class' => 'region'),
   );
 
+  $form_part_label = form_builder($form_id, $form_label, $form_values);
+  $form_part_name = form_builder($form_id, $form_field_name, $form_values);
+  $form_part_type = form_builder($form_id, $form_field_type, $form_values);
+
   $rows[] = array(
-    drupal_render(form_builder($form_id, $form_label, $form_values)),
+    drupal_render($form_part_label),
     NULL,
-    drupal_render(form_builder($form_id, $form_field_name, $form_values)),
-    array('data' => drupal_render(form_builder($form_id, $form_field_type, $form_values)), 'colspan' => 8),
+    drupal_render($form_part_name),
+    array('data' => drupal_render($form_part_type), 'colspan' => 8),
   );
 
   if (module_exists('contact_group')) {
@@ -318,10 +324,13 @@ function _get_fields() {
       '#field_prefix' => 'group_'
     );
 
+    $form_part_group_label = form_builder($form_id, $form_group_label, $form_values);
+    $form_part_group_name = form_builder($form_id, $form_group_name, $form_values);
+
     $rows[] = array(
       'data' => array(
-        drupal_render(form_builder($form_id, $form_group_label, $form_values)),
-        array('data' => drupal_render(form_builder($form_id, $form_group_name, $form_values)), 'colspan' => 7),
+        drupal_render($form_part_group_label),
+        array('data' => drupal_render($form_part_group_name), 'colspan' => 7),
       ),
     );
   }
