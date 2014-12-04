@@ -139,7 +139,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     '#weight' => -43,
   );
 
-  $form['contact_field_vlaues'] = array(
+  $form['contact_field_values'] = array(
     '#type' => 'textarea',
     '#title' => t("Allowed values"),
     '#description' => t("Add key-value pair in key|value format. Add each pair in separate line."),
@@ -175,19 +175,19 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_listfield_submit($form, $form_values) {
-  $ss__num_values = $form_values['values']['contact_field_num_value'];
-  $ss__field_settings['multiple'] = ($ss__num_values) ? TRUE : FALSE;
-  $ss__field_name = $form_values['values']['contact_field_name'];
-  $ss__field_type = $form_values['values']['field_type'];
-  $ss__field_required = $form_values['values']['contact_field_require'];
-  $ss__field_enabled = $form_values['values']['contact_field_enabled'];
-  $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
-  $ss__field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
-  $ss__field_settings['num_value'] = $ss__num_values;
-  $ss__field_weight = $form_values['values']['contact_field_weight'];
-  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $am_options = explode("\n", $form_values['values']['contact_field_vlaues']);
+  $ss_num_values = $form_values['values']['contact_field_num_value'];
+  $ss_field_settings['multiple'] = ($ss_num_values) ? TRUE : FALSE;
+  $ss_field_name = $form_values['values']['contact_field_name'];
+  $ss_field_type = $form_values['values']['field_type'];
+  $ss_field_required = $form_values['values']['contact_field_require'];
+  $ss_field_enabled = $form_values['values']['contact_field_enabled'];
+  $ss_field_settings['title'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
+  $ss_field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
+  $ss_field_settings['num_value'] = $ss_num_values;
+  $ss_field_weight = $form_values['values']['contact_field_weight'];
+  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $am_options = explode("\n", $form_values['values']['contact_field_values']);
   foreach ($am_options as $option) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
@@ -212,19 +212,19 @@ function contact_field_listfield_submit($form, $form_values) {
  * @param unknown_type $form_values
  */
 function contact_field_listfield_update($form, $form_values) {
-  $ss__num_values = $form_values['values']['contact_field_num_value'];
-  $ss__field_settings['multiple'] = ($ss__num_values) ? TRUE : FALSE;
-  $ss__field_name = $form_values['values']['contact_field_name'];
-  $ss__field_type = $form_values['values']['field_type'];
-  $ss__field_required = $form_values['values']['contact_field_require'];
-  $ss__field_enabled = $form_values['values']['contact_field_enabled'];
-  $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
-  $ss__field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
-  $ss__field_settings['num_value'] = $ss__num_values;
-  $ss__field_weight = $form_values['values']['contact_field_weight'];
-  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $am_options = explode("\n", $form_values['values']['contact_field_vlaues']);
+  $ss_num_values = $form_values['values']['contact_field_num_value'];
+  $ss_field_settings['multiple'] = ($ss_num_values) ? TRUE : FALSE;
+  $ss_field_name = $form_values['values']['contact_field_name'];
+  $ss_field_type = $form_values['values']['field_type'];
+  $ss_field_required = $form_values['values']['contact_field_require'];
+  $ss_field_enabled = $form_values['values']['contact_field_enabled'];
+  $ss_field_settings['title'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
+  $ss_field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
+  $ss_field_settings['num_value'] = $ss_num_values;
+  $ss_field_weight = $form_values['values']['contact_field_weight'];
+  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $am_options = explode("\n", $form_values['values']['contact_field_values']);
   foreach ($am_options as $option) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
