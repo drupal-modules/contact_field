@@ -98,7 +98,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
   $form['contact_field_maxlength'] = array(
     '#type' => 'textfield',
     '#title' => t("Maximum length"),
-    '#description' => t("Maximum number of charcter allowed for the field. Leave blank for default length."),
+    '#description' => t("Maximum number of character allowed for the field. Leave blank for default length."),
     '#default_value' => $om_field_details->maxlength,
     '#weight' => -46,
   );
@@ -106,7 +106,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
   $form['contact_field_prefix_field'] = array(
     '#type' => 'textfield',
     '#title' => t("Field prefix"),
-    '#description' => t("A prefix to field itslef. Like Rs., श्री, Mr."),
+    '#description' => t("A prefix to field itself."),
     '#default_value' => $om_field_details->field_prefix,
     '#weight' => -45,
   );
@@ -114,7 +114,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
   $form['contact_field_suffix_field'] = array(
     '#type' => 'textfield',
     '#title' => t("Field suffix"),
-    '#description' => t("A suffix to field itself. Like भैया, feet, gms"),
+    '#description' => t("A suffix to field itself."),
     '#default_value' => $om_field_details->field_suffix,
     '#weight' => -44,
   );
