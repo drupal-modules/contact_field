@@ -9,8 +9,8 @@
  */
 
 /**
- * Implementation of hook_menu
- * 
+ * Implementation of hook_menu()
+ *
  * @return $item
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
@@ -71,8 +71,8 @@ function contact_field_menu() {
 
 
 /**
- * Implementation of hook_form_alter
- * 
+ * Implementation of hook_form_alter()
+ *
  * @param $form
  * @param $form_state
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
@@ -99,16 +99,16 @@ function contact_field_form_alter(&$form, $form_state, $form_id) {
     if (!empty($am_weight)) {
       $form['submit']['#weight'] = max($am_weight) + 2;
       $form['copy']['#weight'] = max($am_weight) + 1;
-      $form['contact_information']['#weight'] = min($am_weight) - 1; 
+      $form['contact_information']['#weight'] = min($am_weight) - 1;
     }
   }
 }
 
 /**
- * contact_field_validate
- * 
+ * contact_field_validate()
+ *
  * Validate the form values against specified criterias
- * 
+ *
  * @param $form
  * @param $form_state
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
@@ -141,14 +141,14 @@ function contact_field_validate($form, $form_state) {
 
 /**
  * _get_field_details
- * 
+ *
  * Return created fields
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_field_details() {
-  $r_result = db_query("SELECT * FROM {contact_fields} WHERE enabled = 1 AND 
+  $r_result = db_query("SELECT * FROM {contact_fields} WHERE enabled = 1 AND
     core = 0 AND (field_group IS NULL OR field_group = '')");
-  while($om_result = db_fetch_object($r_result)) {
+  while ($om_result = db_fetch_object($r_result)) {
     $am_settings = unserialize($om_result->settings);
     $am_field[$om_result->field_name] = array(
       '#type' => $om_result->field_type,
@@ -164,7 +164,7 @@ function _get_field_details() {
     }
   }
   if (module_exists('contact_field_group')) {
-    $r_result = db_query("SELECT * FROM {contact_fields} WHERE enabled = 1 AND 
+    $r_result = db_query("SELECT * FROM {contact_fields} WHERE enabled = 1 AND
       core = 0 AND (field_group IS NULL OR field_group = '')");
     while ($om_result = db_fetch_object($r_result)) {
       $am_settings = unserialize($om_result->settings);
@@ -188,7 +188,7 @@ function _get_field_details() {
 
 /**
  * contact_field_delete_field
- * 
+ *
  * @param string $ss_field_name
  *  The field name to be deleted
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
@@ -202,13 +202,13 @@ function contact_field_delete_field($ss_field_name) {
 }
 
 /**
- * 
+ *
  * @param string $ss_field
  */
 //function contact_field_edit_field($ss_field) {
 //  if ($ss_field) {
 //    module_load_include('inc', 'contact_field', 'contact_field_admin');
-//    $ss_field_type = db_result(db_query("SELECT field_type FROM {contact_fields} 
+//    $ss_field_type = db_result(db_query("SELECT field_type FROM {contact_fields}
 //      WHERE field_name = '%s'", $ss_field));
 //    switch($ss_field_type) {
 //      case 'textfield':
@@ -219,15 +219,15 @@ function contact_field_delete_field($ss_field_name) {
 
 /**
  * _get_field_values
- * 
+ *
  * Return all the details related to a field
- * 
+ *
  * @param array $ss_field
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_field_values($ss_field) {
   if ($ss_field) {
-    $r_result_field = db_query("SELECT * FROM {contact_fields} WHERE 
+    $r_result_field = db_query("SELECT * FROM {contact_fields} WHERE
       field_name = '%s'", $ss_field);
     while ($om_result_field = db_fetch_object($r_result_field)) {
       $am_field = unserialize($om_result_field->settings);
@@ -246,9 +246,9 @@ function _get_field_values($ss_field) {
 
 /**
  * contact_field_filter_xss
- * 
+ *
  * Filter the provided string for restricted html tags
- * 
+ *
  * @param string $ss_string
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
@@ -258,9 +258,9 @@ function contact_field_filter_xss($ss_string) {
 
 /**
  * _contact_field_allowed_tags
- * 
+ *
  * Return tags to be filtered from allowed values
- * 
+ *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _contact_field_allowed_tags() {
@@ -269,20 +269,20 @@ function _contact_field_allowed_tags() {
 
 /**
  * _get_field_type
- * 
+ *
  * Return type of the field
- * 
+ *
  * @param string $ss_field_name
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_field_type($ss_field_name) {
-  return db_result(db_query("SELECT field_type FROM {contact_fields} 
+  return db_result(db_query("SELECT field_type FROM {contact_fields}
    WHERE field_name = '%s'", $ss_field_name));
 }
 
 /**
  * Implementation of hook_mail_alter
- * 
+ *
  * @param unknown_type $message
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
@@ -296,10 +296,10 @@ function contact_field_mail_alter($message) {
         $as_field = array_keys($field);
         if (is_array($message['params'][$as_field[0]])) {
           $ss_value = _get_field_setting($as_field[0], $message['params'][$as_field[0]]);
-          $ss_additional .= $as_title[0].": \t". $ss_value ."\n";
+          $ss_additional .= $as_title[0] . ": \t" . $ss_value . "\n";
         }
         else {
-          $ss_additional .= $as_title[0] .": \t". $message['params'][$as_field[0]] ."\n"; 
+          $ss_additional .= $as_title[0] . ": \t" . $message['params'][$as_field[0]] . "\n";
         }
       }
       $message['body'][] = "\n". $ss_additional;
@@ -310,13 +310,13 @@ function contact_field_mail_alter($message) {
         $as_field = array_keys($field);
         for ($i = 0; $i < count($field); $i++) {
           $ss_value = _get_field_setting($as_field[0], $message['params'][$as_field[$i]]);
-          $am_value["!". $as_field[$i]] = $ss_value;             
+          $am_value["!". $as_field[$i]] = $ss_value;
         }
       }
       $am_value['!message'] = check_plain($message['body'][1]);
-      $am_value['!mail'] = $message['params']['mail']; 
-      $am_value['!subject'] = $message['params']['subject']; 
-      $am_value['!name'] = $message['params']['name']; 
+      $am_value['!mail'] = $message['params']['mail'];
+      $am_value['!subject'] = $message['params']['subject'];
+      $am_value['!name'] = $message['params']['name'];
       $message['body'][1] = t(variable_get("contact_field_message_template", ""), $am_value);
     }
   }
@@ -324,13 +324,13 @@ function contact_field_mail_alter($message) {
 
 /**
  * _get_enabled_fields
- * 
+ *
  *  Return all the enabled fields
- *  
+ *
  *  @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_enabled_fields() {
-  $r_result = db_query("SELECT field_name, field_type, settings FROM {contact_fields} 
+  $r_result = db_query("SELECT field_name, field_type, settings FROM {contact_fields}
     WHERE  enabled = 1 AND core = 0 AND field_type <> 'fieldset'");
   while ($om_result = db_fetch_object($r_result)) {
     $am_settings = unserialize($om_result->settings);
@@ -341,9 +341,9 @@ function _get_enabled_fields() {
 
 /**
  * _get_contact_field
- * 
+ *
  * Return field name and description
- * 
+ *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_contact_field() {
@@ -352,8 +352,8 @@ function _get_contact_field() {
   while ($om_result = db_fetch_object($r_result)) {
     if ($om_result->field_name != 'cid' && $om_result->field_name != 'message') {
       $am_settings = unserialize($om_result->settings);
-      $ss_description = $am_settings['description']; 
-      $ss_value .= "!". $om_result->field_name .": ". $ss_description ."<br />"; 
+      $ss_description = $am_settings['description'];
+      $ss_value .= "!" . $om_result->field_name . ": " . $ss_description . "<br />";
     }
   }
 
@@ -364,7 +364,7 @@ function _get_contact_field() {
  * _get_contact_group
  */
 function _get_contact_group() {
-  $r_result = db_query("SELECT field_name, settings FROM {contact_fields}  
+  $r_result = db_query("SELECT field_name, settings FROM {contact_fields}
     WHERE field_type = 'fieldset'");
   $am_group[""] = t("Select");
   while ($om_result = db_fetch_object($r_result)) {
@@ -377,9 +377,9 @@ function _get_contact_group() {
 
 /**
  * _get_field_setting
- * 
+ *
  * Return human readable values for options and lists
- * 
+ *
  * @param unknown_type $ss_field_name
  * @param unknown_type $ss_field_value
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>

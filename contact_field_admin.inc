@@ -21,7 +21,7 @@ function contact_field_add_field($op, $om_field_details = NULL) {
   $ss_field_type = _get_field_type($op);
 
   if ($op != 'add') {
-    switch($ss_field_type) {
+    switch ($ss_field_type) {
       case 'textfield':
         if (module_exists('contact_textfield')) {
           return drupal_get_form('contact_field_add_field_text_form', $form_state, $op);
@@ -50,8 +50,8 @@ function contact_field_add_field($op, $om_field_details = NULL) {
 //        break;
     }
   }
-  else{
-    switch($om_field_details->type) {
+  else {
+    switch ($om_field_details->type) {
       case 'text':
         if (module_exists('contact_textfield')) {
           return drupal_get_form('contact_field_add_field_text_form', $form_state, $om_field_details);
@@ -271,7 +271,7 @@ function _get_fields() {
   }
   else {
     drupal_set_message(t("No contact form field module is enabled. Please enable from !module",
-     array('!module' => l(t("module page"), 'admin/build/modules'))), 'error');
+      array('!module' => check_plain(l(t("module page"), 'admin/build/modules'))), 'error'));
   }
 
   $form_label['field_label'] = array(
@@ -358,7 +358,7 @@ function _set_core_fields() {
   $am_exclude = array('#token', 'submit', 'copy', 'contact_information');
   foreach ($form as $name => $attribute) {
     if (!in_array($name, $am_exclude) && !empty($attribute['#type'])) {
-     $b_exist = db_result(db_query("SELECT field_name FROM {contact_fields} WHERE core = 1 AND field_name = '%s'", $name));
+      $b_exist = db_result(db_query("SELECT field_name FROM {contact_fields} WHERE core = 1 AND field_name = '%s'", $name));
       if (!$b_exist) {
         $am_settings = array('title' => $form[$name]['#title']);
         db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, %d, %d, '%s')",
