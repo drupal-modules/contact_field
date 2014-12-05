@@ -16,6 +16,7 @@
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_add_field($op, $om_field_details = NULL) {
+  $form_state = array(); // because it's local variable, we should initialize it there
   if ($om_field_details) {
     $om_field_details = unserialize($om_field_details);
   }
@@ -122,8 +123,14 @@ function contact_field_list_update($form, $form_values) {
   $ss_field_label = $form_values['clicked_button']['#post']['field_label'];
   $ss_field_name = $form_values['clicked_button']['#post']['field_name'];
   $ss_field_type = $form_values['clicked_button']['#post']['field_type'];
-  $ss_group_label = $form_values['clicked_button']['#post']['field_group_label'];
-  $ss_group_name = $form_values['clicked_button']['#post']['field_group_name'];
+  
+  if (module_exists('contact_group')) {
+    $ss_group_label = $form_values['clicked_button']['#post']['field_group_label'];
+    $ss_group_name = $form_values['clicked_button']['#post']['field_group_name'];
+  }
+  else {
+    $ss_group_label = $ss_group_name = NULL; //just initialize it to avoid Notices.
+  }
 
   if ($ss_field_name && $ss_field_label && $ss_field_type) {
     $om_field_details = (object) array('name' => "field_". $ss_field_name, 'title' => $ss_field_label, 'type' => $ss_field_type);
@@ -172,6 +179,7 @@ function contact_field_list_update($form, $form_values) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_fields() {
+  $form_state = array(); // because it's local variable, we should initialize it there
   _set_core_fields();
 
   $form_id = 'contact_field_list_field';
@@ -199,9 +207,16 @@ function _get_fields() {
     }
     else {
       $ss_module = '(Module: Contact form field)';
+      $class = '';
     }
 
     $am_settings = unserialize($om_result->settings);
+
+    $form_part_weight = array(
+      '#post' => array(), // otherwise we will have Notice: Undefined index: #post in form_builder() (line 948 of includes\form.inc)
+      '#programmed' => TRUE, // otherwise we will have Notice: Undefined index: #programmed in form_builder() (line 949 of includes\form.inc)
+      '#tree' => FALSE, // otherwise we will have Notice: Undefined index: #tree in form_builder() (line 952 of includes\form.inc).
+    );
 
     $form_part_weight['contact_weight_'. $om_result->field_name] = array(
       '#type' => 'textfield',
@@ -228,6 +243,13 @@ function _get_fields() {
     }
     else {
       if (module_exists('contact_group')) {
+
+        $form_part_group = array(
+          '#post' => array(), // otherwise we will have Notice: Undefined index: #post in form_builder() (line 948 of includes\form.inc)
+          '#programmed' => TRUE, // otherwise we will have Notice: Undefined index: #programmed in form_builder() (line 949 of includes\form.inc)
+          '#tree' => FALSE, // otherwise we will have Notice: Undefined index: #tree in form_builder() (line 952 of includes\form.inc).
+        );
+
         $form_part_group['contact_group_'. $om_result->field_name ."_parent"] = array(
           '#type' => 'select',
           '#title' => t("Group"),
@@ -258,11 +280,17 @@ function _get_fields() {
       $ss_group_fields = count($am_in_group == 2) ? implode("", $am_in_group) : $am_in_group[0];
 
       $form_part_weight = form_builder(NULL, $form_part_weight, $form_state);
-      $form_part_group = form_builder(NULL, $form_part_group, $form_state);
+
+      if (module_exists('contact_group')) {
+        $form_part_group = form_builder(NULL, $form_part_group, $form_state);
+        $rendered = drupal_render($form_part_weight) . drupal_render($form_part_group);
+      }
+      else {
+        $rendered = drupal_render($form_part_weight);
+      }
       $row = array(
         $ss_group_fields,
-        drupal_render($form_part_weight) .
-          drupal_render($form_part_group),
+        $rendered,
         $om_result->field_name,
         $om_result->field_type,
         ($om_result->required ? t("Yes") : t("No")),
@@ -276,7 +304,7 @@ function _get_fields() {
     $rows[] = array(
       'id' => 'contact-field',
       'data' => $row,
-      'class' => array('draggable '. $class),
+      'class' => 'draggable ' . $class,
     );
 
     unset($class, $form_part_weight, $form_part_group);
@@ -295,7 +323,12 @@ function _get_fields() {
       array('!module' => check_plain(l(t("module page"), 'admin/build/modules'))), 'error'));
   }
 
-  $form_label['#build_id'] = $ss_build_id;
+  $form_label = array(
+    '#post' => array(), // otherwise we will have Notice: Undefined index: #post in form_builder() (line 948 of includes\form.inc)
+    '#programmed' => TRUE, // otherwise we will have Notice: Undefined index: #programmed in form_builder() (line 949 of includes\form.inc)
+    '#tree' => FALSE, // otherwise we will have Notice: Undefined index: #tree in form_builder() (line 952 of includes\form.inc).
+  );
+
   $form_label['field_label'] = array(
     '#type' => 'textfield',
     '#title' => t("New field"),
@@ -303,7 +336,12 @@ function _get_fields() {
     '#description' => t("Label"),
   );
 
-  $form_field_name['#build_id'] = $ss_build_id;
+  $form_field_name = array(
+    '#post' => array(), // otherwise we will have Notice: Undefined index: #post in form_builder() (line 948 of includes\form.inc)
+    '#programmed' => TRUE, // otherwise we will have Notice: Undefined index: #programmed in form_builder() (line 949 of includes\form.inc)
+    '#tree' => FALSE, // otherwise we will have Notice: Undefined index: #tree in form_builder() (line 952 of includes\form.inc).
+  );
+
   $form_field_name['field_name'] = array(
     '#type' => 'textfield',
     '#size' => 30,
@@ -311,7 +349,12 @@ function _get_fields() {
     '#field_prefix' => 'field_'
   );
 
-  $form_field_type['#build_id'] = $ss_build_id;
+  $form_field_type = array(
+    '#post' => array(), // otherwise we will have Notice: Undefined index: #post in form_builder() (line 948 of includes\form.inc)
+    '#programmed' => TRUE, // otherwise we will have Notice: Undefined index: #programmed in form_builder() (line 949 of includes\form.inc)
+    '#tree' => FALSE, // otherwise we will have Notice: Undefined index: #tree in form_builder() (line 952 of includes\form.inc).
+  );
+
   $form_field_type['field_type'] = array(
     '#type' => 'select',
     '#description' => t("Set the field type"),
@@ -321,6 +364,8 @@ function _get_fields() {
   $rows[] = array(
     array('data' => t("Add"), 'colspan' => 8, 'class' => array('region')),
   );
+
+  $form_id = NULL; //just initialize $form_id
 
   $form_part_label = form_builder($form_id, $form_label, $form_values);
   $form_part_name = form_builder($form_id, $form_field_name, $form_values);
@@ -387,8 +432,7 @@ function _get_fields() {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _set_core_fields() {
-  $form_state = array();
-  $form = array();
+  $form_id  = 'contact_site_page';
   module_load_include('inc', 'contact', 'contact.pages');
   $form = contact_site_form($form, $form_state);
   $i = -10;

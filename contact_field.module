@@ -120,17 +120,22 @@ function contact_field_form_alter(&$form, $form_state, $form_id) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_validate($form, $form_state) {
-  $ss__field_lable = $form_state['clicked_button']['#post']['field_label'];
-  $ss__field_name = $form_state['clicked_button']['#post']['field_name'];
-  $ss__field_type = $form_state['clicked_button']['#post']['field_type'];
-  $ss__group_label = $form_state['clicked_button']['#post']['field_group_label'];
-  $ss__group_name = $form_state['clicked_button']['#post']['field_group_name'];
+  $ss_field_label = isset($form_state['clicked_button']['#post']['contact_field_label']) ? $form_state['clicked_button']['#post']['contact_field_label']
+    : NULL;
+  $ss_field_name = isset($form_state['clicked_button']['#post']['contact_field_name']) ? $form_state['clicked_button']['#post']['contact_field_name']
+    : NULL;
+  $ss_field_type = isset($form_state['clicked_button']['#post']['field_type']) ? $form_state['clicked_button']['#post']['field_type']
+    : NULL;
+  $ss_group_label = isset($form_state['clicked_button']['#post']['field_group_label']) ? $form_state['clicked_button']['#post']['field_group_label']
+    : NULL;
+  $ss_group_name = isset($form_state['clicked_button']['#post']['field_group_name']) ? $form_state['clicked_button']['#post']['field_group_name']
+    : NULL;
 
-  if ($ss__field_lable && empty($ss__field_name)) {
+  if ($ss_field_label && empty($ss_field_name)) {
     form_set_error('field_name', t("Please set a unique field name."));
   }
 
-  if ($ss__field_lable && $ss__field_name && empty($ss__field_type)) {
+  if ($ss_field_label && $ss_field_name && empty($ss_field_type)) {
     form_set_error('field_type', t("Please select a field type."));
   }
 
@@ -138,9 +143,9 @@ function contact_field_validate($form, $form_state) {
     form_set_error('field_group_name', t("Please set a group name."));
   }
 
-  $ss__field_exist = db_result(db_query("SELECT field_type FROM {contact_fields}
-    WHERE field_name = '%s'", $form_state['clicked_button']['#post']['field_name']));
-  if ($ss__field_exist) {
+  $ss_field_exist = db_result(db_query("SELECT field_type FROM {contact_fields}
+    WHERE field_name = '%s'", $ss_field_name));
+  if ($ss_field_exist) {
     form_set_error('contact_field_name', t("A contact field with the same name already exists."));
   }
 }
