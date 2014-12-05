@@ -280,7 +280,7 @@ function _get_fields() {
       'class' => array('draggable '. $class),
     );
 
-    unset($class, $am_weight, $am_group);
+    unset($class, $am_weight, $am_group, $form_part_weight, $form_part_group);
   }
 
   //Add fields
@@ -334,6 +334,8 @@ function _get_fields() {
     array('data' => drupal_render($form_part_type), 'colspan' => 8),
   );
 
+  unset($form_part_label, $form_part_name, $form_part_type);
+
   if (module_exists('contact_group')) {
   	$form_group_label['#build_id'] = $ss_build_id;
     $form_group_label['field_group_label'] = array(
@@ -360,6 +362,8 @@ function _get_fields() {
         array('data' => drupal_render($form_part_group_name), 'colspan' => 7),
       ),
     );
+
+    unset($form_part_group_label, $form_part_group_name);
   }
 
   drupal_add_tabledrag('contact-field', 'depth', 'parent', 'contact-group', NULL, NULL, TRUE, 1);
