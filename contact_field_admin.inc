@@ -183,7 +183,7 @@ function _get_fields() {
 
     $am_settings = unserialize($om_result->settings);
 
-    $am_weight['contact_weight_'. $om_result->field_name] = array(
+    $form_part_weight['contact_weight_'. $om_result->field_name] = array(
       '#type' => 'textfield',
       '#title' => t("Weight"),
       '#size' => 5,
@@ -194,7 +194,7 @@ function _get_fields() {
     if ($om_result->field_type == 'fieldset') {
       $row = array(
         $am_settings['title'],
-        drupal_render(form_builder(NULL, $am_weight, $form_state)),
+        drupal_render(form_builder(NULL, $form_part_weight, $form_state)),
         $om_result->field_name,
         array('data' => t("Standard group")),
         NULL,
@@ -207,7 +207,7 @@ function _get_fields() {
     }
     else {
       if (module_exists('contact_group')) {
-        $am_group['contact_group_'. $om_result->field_name ."_parent"] = array(
+        $form_part_group['contact_group_'. $om_result->field_name ."_parent"] = array(
           '#type' => 'select',
           '#title' => t("Group"),
           '#multiple' => FALSE,
@@ -217,7 +217,7 @@ function _get_fields() {
           '#attributes' => array('class' => 'contact-group'),
         );
 
-        $am_group[$om_result->field_name] = array(
+        $form_part_group[$om_result->field_name] = array(
           '#type' => 'hidden',
           '#parent' => array($om_result->field_name),
           '#default_value' => $om_result->field_name,
@@ -236,8 +236,8 @@ function _get_fields() {
       }
       $ss_group_fields = count($am_in_group == 2) ? implode("", $am_in_group) : $am_in_group[0];
 
-      $form_part_weight = form_builder(NULL, $am_weight, $form_state);
-      $form_part_group = form_builder(NULL, $am_group, $form_state);
+      $form_part_weight = form_builder(NULL, $form_part_weight, $form_state);
+      $form_part_group = form_builder(NULL, $form_part_group, $form_state);
       $row = array(
         $ss_group_fields,
         drupal_render($form_part_weight) .
@@ -258,7 +258,7 @@ function _get_fields() {
       'class' => 'draggable '. $class,
     );
 
-    unset($class, $am_weight, $am_group, $form_part_weight, $form_part_group);
+    unset($class, $form_part_weight, $form_part_group);
   }
 
   //Add fields
