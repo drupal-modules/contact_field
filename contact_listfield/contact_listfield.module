@@ -29,6 +29,7 @@ function contact_listfield_info() {
 function contact_field_add_field_listfield_form($form_state, $ss_field_name = NULL, $om_field_details = NULL) {
   drupal_set_title(t("Configure list field"));
   $form = array();
+  $ss_option = ""; //initialize it first
   if (arg(3) != 'add') {
     $om_field_details = (object) _get_field_values($om_field_details);
     if (!empty($om_field_details->options)) {
