@@ -155,7 +155,7 @@ function _get_field_details() {
     core = 0 AND (field_group IS NULL OR field_group = '')");
   while ($om_result = db_fetch_object($r_result)) {
     $am_settings = unserialize($om_result->settings);
-    $am_field[$om_result->field_name] = array(
+    $form_fields[$om_result->field_name] = array(
       '#type' => $om_result->field_type,
       '#title' => t($am_settings['title']),
       '#required' => $om_result->required,
@@ -164,7 +164,7 @@ function _get_field_details() {
 
     foreach ($am_settings as $key => $value) {
       if ($key != 'title' && $value != "") {
-        $am_field[$om_result->field_name]["#". $key] = $value;
+        $form_fields[$om_result->field_name]["#". $key] = $value;
       }
     }
   }
@@ -173,7 +173,7 @@ function _get_field_details() {
       core = 0 AND (field_group IS NULL OR field_group = '')");
     while ($om_result = db_fetch_object($r_result)) {
       $am_settings = unserialize($om_result->settings);
-      $am_field[$om_result->field_group][$om_result->field_name] = array(
+      $form_fields[$om_result->field_group][$om_result->field_name] = array(
         '#type' => $om_result->field_type,
         '#title' => $am_settings['title'],
         '#parent' => array($om_result->field_name),
@@ -183,12 +183,12 @@ function _get_field_details() {
 
       foreach ($am_settings as $key => $value) {
         if ($key != 'title') {
-          $am_field[$om_result->field_group][$om_result->field_name]["#". $key] = $value;
+          $form_fields[$om_result->field_group][$om_result->field_name]["#". $key] = $value;
         }
       }
     }
   }
-  return $am_field;
+  return $form_fields;
 }
 
 /**
