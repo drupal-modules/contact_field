@@ -377,8 +377,8 @@ function _get_contact_field() {
   foreach ($r__result as $om_result) {
     if ($om_result->field_name != 'cid' && $om_result->field_name != 'message') {
       $am_settings = unserialize($om_result->settings);
-      $ss__description = $am_settings['description'];
-      $ss__value .= $om_result->field_name .": ". $ss__description ."<br />";
+      $ss_description = isset($am_settings['description']) ? $am_settings['description'] : "";
+      $ss_value .= "!" . $om_result->field_name . ": " . $ss_description . "<br />";
     }
   }
 
