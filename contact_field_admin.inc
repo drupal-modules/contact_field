@@ -119,7 +119,7 @@ function contact_field_list_update($form, $form_values) {
   $ss_field_label = $form_values['clicked_button']['#post']['field_label'];
   $ss_field_name = $form_values['clicked_button']['#post']['field_name'];
   $ss_field_type = $form_values['clicked_button']['#post']['field_type'];
-  
+
   if (module_exists('contact_group')) {
     $ss_group_label = $form_values['clicked_button']['#post']['field_group_label'];
     $ss_group_name = $form_values['clicked_button']['#post']['field_group_name'];
@@ -298,8 +298,8 @@ function _get_fields() {
     }
   }
   else {
-    drupal_set_message(t("No contact form field module is enabled. Please enable from !module",
-      array('!module' => check_plain(l(t("module page"), 'admin/build/modules'))), 'error'));
+    drupal_set_message(t("No contact form field module is enabled. Please enable from @module",
+      array('!module' => l(t("module page"), 'admin/build/modules'))), 'error');
   }
 
   $form_label = array(
