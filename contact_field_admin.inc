@@ -83,6 +83,47 @@ function contact_field_add_field($op, $om_field_details = NULL) {
 }
 
 /**
+ * contact_field_confirm_delete_field
+ *
+ * @param &$form_state
+ * @param string $ss_field_name
+ *  The field name to be deleted
+ */
+function contact_field_confirm_delete_field(&$form_state, $ss_field_name) {
+  if (isset($ss_field_name) && ($ss_field_name)) {
+    $ss_field_exist = db_result(db_query("SELECT COUNT(*) FROM {contact_fields} WHERE field_name = '%s'", $ss_field_name));
+    if ($ss_field_exist) {
+      $form['name'] = array(
+          '#type' => 'value',
+          '#value' => $ss_field_name,
+        );
+      return confirm_form($form, t('Are you sure you want to delete the field %name from contact form?',
+        array('%name' => $ss_field_name)),
+        'admin/build/contact/manage',
+        t('This action cannot be undone.'),
+        t('Delete'),
+        t('Cancel'));
+    }
+    else {
+      drupal_not_found(); //give 404 page to user
+      return;
+    }
+  }
+}
+
+/*
+ * contact_field_confirm_delete_field_submit
+ * @param $form
+ * @param $form_state
+ * Delete one field
+ */
+function contact_field_confirm_delete_field_submit($form, &$form_state) {
+  $ss_field_name = $form_state['values']['name'];
+  db_query("DELETE FROM {contact_fields} WHERE field_name = '%s'", $ss_field_name);
+  $form_state['redirect'] = 'admin/build/contact/manage';
+}
+
+/**
  *
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
@@ -391,7 +432,6 @@ function _get_fields() {
   drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight');
   return theme('table', $header, $rows, array('id' => 'contact-field'));
 }
-
 
 /**
  * _set_core_fields
