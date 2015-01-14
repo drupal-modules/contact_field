@@ -83,6 +83,36 @@ function contact_field_add_field($op, $om_field_details = NULL) {
   }
 }
 
+/**
+ * contact_field_delete_field
+ *
+ * @param string $ss__field_name
+ *  The field name to be deleted
+ * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ */
+function contact_field_delete_field($ss_field_name) {
+  if ($ss_field_name) {
+    db_query("DELETE FROM {contact_fields} WHERE field_name = '%s'", $ss_field_name);
+    drupal_goto("admin/build/contact/manage");
+  }
+
+}
+
+/**
+ *
+ * @param string $ss_field
+ */
+function contact_field_edit_field($ss_field) {
+  if ($ss_field) {
+    module_load_include('inc', 'contact_field', 'contact_field_admin');
+    $ss_field_type = db_result(db_query("SELECT field_type FROM {contact_fields}
+      WHERE field_name = '%s'", $ss_field));
+    switch($ss_field_type) {
+      case 'textfield':
+        return drupal_get_form('contact_field_add_field_text_form', $form_state, $ss_field, TRUE);
+    }
+  }
+}
 
 /**
  *
