@@ -1,4 +1,5 @@
 name = Contact fields
 description = Add custom fields to site wide contact form
-core = 6.x
+package = Contact fields
+core = 7.x
 dependencies[] = contact
