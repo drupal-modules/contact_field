@@ -31,13 +31,13 @@ function contact_listfield_info() {
  *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_listfield_form($form_state, $ss__field_name = NULL, $om__field_details = NULL) {
+function contact_field_add_field_listfield_form($form_state, $ss__field_name = NULL, $om_field_details = NULL) {
   drupal_set_title(t("Configure list field"));
   $form = array();
   if (arg(3) != 'add') {
-    $om__field_details = (object) _get_field_values($om__field_details);
-    if (!empty($om__field_details->options)) {
-      foreach ($om__field_details->options as $key => $value) {
+    $om_field_details = (object) _get_field_values($om_field_details);
+    if (!empty($om_field_details->options)) {
+      foreach ($om_field_details->options as $key => $value) {
         $ss__option .= $key ."|". $value;
       }
     }
@@ -53,13 +53,13 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     '#title' => t("Field name"),
     '#description' => t("Machine readable name of the field. This should only
       contain alphanumaric charachters and underscore."),
-    '#value' => $om__field_details->name,
+    '#value' => $om_field_details->name,
     '#weight' => -50,
   );
 
   $form['contact_field_name'] = array(
     '#type' => 'hidden',
-    '#value' => $om__field_details->name,
+    '#value' => $om_field_details->name,
   );
 
   $form['field_type'] = array(
@@ -72,7 +72,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     '#type' => 'textfield',
     '#title' => t("Field title"),
     '#description' => t("Provide the title of the field"),
-    '#default_value' => $om__field_details->title,
+    '#default_value' => $om_field_details->title,
     '#required' => TRUE,
     '#weight' => -49,
   );
@@ -86,7 +86,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
       0 => t("Single"),
       1 => t("Multiple"),
     ),
-    '#default_value' => $om__field_details->num_value ? $om__field_details->num_value : 0,
+    '#default_value' => $om_field_details->num_value ? $om_field_details->num_value : 0,
     '#required' => TRUE,
     '#weight' => -48,
   );
@@ -95,7 +95,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     '#type' => 'textfield',
     '#title' => t("Prefix"),
     '#description' => t("Add prefix to add style to the field."),
-    '#default_value' => $om__field_details->prefix,
+    '#default_value' => $om_field_details->prefix,
     '#weight' => -47,
   );
 
@@ -103,7 +103,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     '#type' => 'textfield',
     '#title' => t("Suffix"),
     '#description' => t("Add suffix to add style to the field."),
-    '#default_value' => $om__field_details->suffix,
+    '#default_value' => $om_field_details->suffix,
     '#weight' => -46,
   );
 
@@ -115,7 +115,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
       0 => t("No"),
       1 => t("Yes"),
     ),
-    '#default_value' => $om__field_details->required ? $om__field_details->required : 1,
+    '#default_value' => $om_field_details->required ? $om_field_details->required : 1,
     '#required' => TRUE,
     '#weight' => -45,
   );
@@ -125,7 +125,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     '#title' => t("Display this field"),
     '#description' => t("Check this box to make this field available on
       contact form."),
-    '#default_value' => $om__field_details->enabled ? $om__field_details->enabled : 1,
+    '#default_value' => $om_field_details->enabled ? $om_field_details->enabled : 1,
     '#weight' => -44,
   );
 
@@ -135,7 +135,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     '#size' => 10,
     '#description' => t("Fields with positive weight will sink.
       Negative weight will make the field pop up."),
-    '#default_value' => $om__field_details->weight ? $om__field_details->weight : 0,
+    '#default_value' => $om_field_details->weight ? $om_field_details->weight : 0,
     '#weight' => -43,
   );
 
@@ -153,7 +153,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     '#title' => t("Help text"),
     '#description' => t("Help text will appear just beneath the field like this,
       to help user in filling value in the field."),
-    '#default_value' => $om__field_details->description ? $om__field_details->description : "",
+    '#default_value' => $om_field_details->description ? $om_field_details->description : "",
     '#weight' => -41,
   );
 
@@ -187,8 +187,8 @@ function contact_field_listfield_submit($form, $form_values) {
   $ss__field_settings['num_value'] = $ss__num_values;
   $ss__field_weight = $form_values['values']['contact_field_weight'];
   $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $am__options = explode("\n", $form_values['values']['contact_field_vlaues']);
-  foreach ($am__options as $option) {
+  $am_options = explode("\n", $form_values['values']['contact_field_vlaues']);
+  foreach ($am_options as $option) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
       list($key, $value) = explode("|", $option);
@@ -224,8 +224,8 @@ function contact_field_listfield_update($form, $form_values) {
   $ss__field_settings['num_value'] = $ss__num_values;
   $ss__field_weight = $form_values['values']['contact_field_weight'];
   $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $am__options = explode("\n", $form_values['values']['contact_field_vlaues']);
-  foreach ($am__options as $option) {
+  $am_options = explode("\n", $form_values['values']['contact_field_vlaues']);
+  foreach ($am_options as $option) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
       list($key, $value) = explode("|", $option);

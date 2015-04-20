@@ -40,11 +40,11 @@ function contact_textfield_info() {
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, $om__field_details = NULL) {
+function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, $om_field_details = NULL) {
   $form = array();
 
   if (arg(3) != 'add') {
-    $om__field_details = (object) _get_field_values($om__field_details);
+    $om_field_details = (object) _get_field_values($om_field_details);
     $form['#submit'] = array('contact_field_update');
   }
   else {
@@ -55,14 +55,14 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
   $form['name'] = array(
     '#type' => 'item',
     '#title' => t("Field name"),
-    '#value' => $om__field_details->name,
+    '#value' => $om_field_details->name,
     '#description' => t("Field name can not be changed."),
     '#weight' => -50,
   );
 
   $form['contact_field_name'] = array(
     '#type' => 'hidden',
-    '#value' => $om__field_details->name,
+    '#value' => $om_field_details->name,
   );
 
   $form['field_type'] = array(
@@ -74,7 +74,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#type' => 'textfield',
     '#title' => t("Field title"),
     '#description' => t("Provide the title of the field."),
-    '#default_value' => $om__field_details->title,
+    '#default_value' => $om_field_details->title,
     '#required' => TRUE,
     '#weight' => -49,
   );
@@ -83,7 +83,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#type' => 'textfield',
     '#title' => t("Prefix"),
     '#description' => t("Add prefix to add style to the field."),
-    '#default_value' => $om__field_details->prefix,
+    '#default_value' => $om_field_details->prefix,
     '#weight' => -48,
   );
 
@@ -91,7 +91,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#type' => 'textfield',
     '#title' => t("Suffix"),
     '#description' => t("Add suffix to add style to the field."),
-    '#default_value' => $om__field_details->suffix,
+    '#default_value' => $om_field_details->suffix,
     '#weight' => -47,
   );
 
@@ -99,7 +99,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#type' => 'textfield',
     '#title' => t("Maximum length"),
     '#description' => t("Maximum number of charcter allowed for the field. Leave blank for default length."),
-    '#default_value' => $om__field_details->maxlength,
+    '#default_value' => $om_field_details->maxlength,
     '#weight' => -46,
   );
 
@@ -107,7 +107,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#type' => 'textfield',
     '#title' => t("Field prefix"),
     '#description' => t("A prefix to field itslef. Like Rs., श्री, Mr."),
-    '#default_value' => $om__field_details->field_prefix,
+    '#default_value' => $om_field_details->field_prefix,
     '#weight' => -45,
   );
 
@@ -115,7 +115,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#type' => 'textfield',
     '#title' => t("Field suffix"),
     '#description' => t("A suffix to field itself. Like भैया, feet, gms"),
-    '#default_value' => $om__field_details->field_suffix,
+    '#default_value' => $om_field_details->field_suffix,
     '#weight' => -44,
   );
 
@@ -123,7 +123,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#type' => 'radios',
     '#title' => t("Required?"),
     '#description' => t("Whether this field is mandatory."),
-    '#default_value' => $om__field_details->required ? $om__field_details->required : 1,
+    '#default_value' => $om_field_details->required ? $om_field_details->required : 1,
     '#options' => array(
       0 => t("No"),
       1 => t("Yes"),
@@ -137,7 +137,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#title' => t("Display this field"),
     '#description' => t("Check this box to make this field available on
       contact form."),
-    '#default_value' => $om__field_details->enabled ? $om__field_details->enabled : 1,
+    '#default_value' => $om_field_details->enabled ? $om_field_details->enabled : 1,
     '#weight' => -42,
   );
 
@@ -147,7 +147,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#size' => 10,
     '#description' => t("Fields with positive weight will sink.
       Negative weight will make the field pop up."),
-    '#default_value' => $om__field_details->weight ? $om__field_details->weight : 0,
+    '#default_value' => $om_field_details->weight ? $om_field_details->weight : 0,
     '#weight' => -41,
   );
 
@@ -156,7 +156,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#title' => t("Help text"),
     '#description' => t("Help text will appear just beneath the field like this,
       to help user in filling value in the field."),
-    '#default_value' => $om__field_details->description ? $om__field_details->description : "",
+    '#default_value' => $om_field_details->description ? $om_field_details->description : "",
     '#weight' => -40,
   );
 
@@ -238,11 +238,11 @@ function contact_field_update($form, $form_values) {
  *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_textarea_form($form_state, $ss__field_name = NULL, $om__field_details = NULL) {
+function contact_field_add_field_textarea_form($form_state, $ss__field_name = NULL, $om_field_details = NULL) {
   drupal_set_title(t("Configure text area"));
   $form = array();
   if (arg(3) != 'add') {
-    $om__field_details = (object) _get_field_values($om__field_details);
+    $om_field_details = (object) _get_field_values($om_field_details);
     $form['#submit'] = array('contact_field_update');
   }
   else {
@@ -253,14 +253,14 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
   $form['name'] = array(
     '#type' => 'item',
     '#title' => t("Field name"),
-    '#value' => $om__field_details->name,
+    '#value' => $om_field_details->name,
     '#description' => t("Field name can not be changed."),
     '#weight' => -50,
   );
 
   $form['contact_field_name'] = array(
     '#type' => 'hidden',
-    '#value' => $om__field_details->name,
+    '#value' => $om_field_details->name,
   );
 
   $form['field_type'] = array(
@@ -272,7 +272,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#type' => 'textfield',
     '#title' => t("Field title"),
     '#description' => t("Provide the title of the field"),
-    '#default_value' => $om__field_details->title,
+    '#default_value' => $om_field_details->title,
     '#required' => TRUE,
     '#weight' => -49,
   );
@@ -281,7 +281,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#type' => 'textfield',
     '#title' => t("Rows"),
     '#description' => t("Number of rows. Leave blank for default rows"),
-    '#default_value' => $om__field_details->row,
+    '#default_value' => $om_field_details->row,
     '#weight' => -48,
   );
 
@@ -289,7 +289,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#type' => 'textfield',
     '#title' => t("Columns"),
     '#description' => t("Number of column. Leave blank for default columns."),
-    '#default_value' => $om__field_details->column,
+    '#default_value' => $om_field_details->column,
     '#weight' => -47,
   );
 
@@ -297,7 +297,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#type' => 'radios',
     '#title' => t("Required?"),
     '#description' => t("Whether this field is mandatory."),
-    '#default_value' => $om__field_details->required ? $om__field_details->required : 1,
+    '#default_value' => $om_field_details->required ? $om_field_details->required : 1,
     '#options' => array(
       0 => t("No"),
       1 => t("Yes"),
@@ -311,7 +311,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#title' => t("Display this field"),
     '#description' => t("Check this box to make this field available on
       contact form."),
-    '#default_value' => $om__field_details->enabled ? $om__field_details->enabled : 1,
+    '#default_value' => $om_field_details->enabled ? $om_field_details->enabled : 1,
     '#weight' => -42,
   );
 
@@ -321,7 +321,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#size' => 10,
     '#description' => t("Fields with positive weight will sink.
       Negative weight will make the field pop up."),
-    '#default_value' => $om__field_details->weight ? $om__field_details->weight : 0,
+    '#default_value' => $om_field_details->weight ? $om_field_details->weight : 0,
     '#weight' => -41,
   );
 
@@ -330,7 +330,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#title' => t("Help text"),
     '#description' => t("Help text will appear just beneath the field like this,
       to help user in filling value in the field."),
-    '#default_value' => $om__field_details->description ? $om__field_details->description : "",
+    '#default_value' => $om_field_details->description ? $om_field_details->description : "",
     '#weight' => -40,
   );
 

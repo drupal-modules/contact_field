@@ -15,9 +15,9 @@
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field($op, $om__field_details = NULL) {
-  if ($om__field_details) {
-    $om__field_details = unserialize($om__field_details);
+function contact_field_add_field($op, $om_field_details = NULL) {
+  if ($om_field_details) {
+    $om_field_details = unserialize($om_field_details);
   }
   $ss__field_type = _get_field_type($op);
 
@@ -52,30 +52,30 @@ function contact_field_add_field($op, $om__field_details = NULL) {
     }
   }
   else{
-    switch($om__field_details->type) {
+    switch($om_field_details->type) {
       case 'text':
         if (module_exists('contact_textfield')) {
-          return drupal_get_form('contact_field_add_field_text_form', $form_state, $om__field_details);
+          return drupal_get_form('contact_field_add_field_text_form', $form_state, $om_field_details);
         }
         break;
       case 'area':
         if (module_exists('contact_textfield')) {
-          return drupal_get_form('contact_field_add_field_textarea_form', $form_state, $om__field_details);
+          return drupal_get_form('contact_field_add_field_textarea_form', $form_state, $om_field_details);
         }
         break;
       case 'option':
         if (module_exists('contact_option')) {
-          return drupal_get_form('contact_field_add_field_option_form', $form_state, $om__field_details);
+          return drupal_get_form('contact_field_add_field_option_form', $form_state, $om_field_details);
         }
         break;
       case 'list':
         if (module_exists('contact_listfield')) {
-          return drupal_get_form('contact_field_add_field_listfield_form', $form_state, $om__field_details);
+          return drupal_get_form('contact_field_add_field_listfield_form', $form_state, $om_field_details);
         }
 
       case 'fieldset':
         if (module_exists('contact_listfield')) {
-          contact_group_submit($form_state, $om__field_details);
+          contact_group_submit($form_state, $om_field_details);
         }
         break;
     }
@@ -126,35 +126,35 @@ function contact_field_list_update($form, $form_values) {
   $ss__group_name = $form_values['clicked_button']['#post']['field_group_name'];
 
   if ($ss__field_name && $ss__field_label && $ss__field_type) {
-    $om__field_details = (object) array('name' => "field_". $ss__field_name, 'title' => $ss__field_label, 'type' => $ss__field_type);
-    drupal_goto("admin/build/contact/add/". serialize($om__field_details));
+    $om_field_details = (object) array('name' => "field_". $ss__field_name, 'title' => $ss__field_label, 'type' => $ss__field_type);
+    drupal_goto("admin/build/contact/add/". serialize($om_field_details));
   }
 
   elseif ($ss__group_label && $ss__group_name) {
-    $om__field_details = (object) array('name' => "group_". $ss__group_name, 'title' => $ss__group_label, 'type' => 'fieldset');
-    drupal_goto("admin/build/contact/add/". serialize($om__field_details));
+    $om_field_details = (object) array('name' => "group_". $ss__group_name, 'title' => $ss__group_label, 'type' => 'fieldset');
+    drupal_goto("admin/build/contact/add/". serialize($om_field_details));
   }
 
   else {
-    $am__weight = preg_grep("/^(contact_weight_)/", array_keys($form_values['clicked_button']['#post']));
-    $am__group = preg_grep("/^(contact_group_)/", array_keys($form_values['clicked_button']['#post']));
+    $am_weight = preg_grep("/^(contact_weight_)/", array_keys($form_values['clicked_button']['#post']));
+    $am_group = preg_grep("/^(contact_group_)/", array_keys($form_values['clicked_button']['#post']));
 
-    if (!empty($am__weight)) {
-      foreach ($am__weight as $key => $value) {
-        $am__field = preg_split("/^(contact_weight_)/", $value, -1, PREG_SPLIT_NO_EMPTY);
-        if (!empty($am__field)) {
+    if (!empty($am_weight)) {
+      foreach ($am_weight as $key => $value) {
+        $am_field = preg_split("/^(contact_weight_)/", $value, -1, PREG_SPLIT_NO_EMPTY);
+        if (!empty($am_field)) {
           db_query("UPDATE {contact_fields} SET weight = %d WHERE field_name = '%s'",
-          $form_values['clicked_button']['#post'][$value], $am__field[0]);
+          $form_values['clicked_button']['#post'][$value], $am_field[0]);
         }
       }
     }
 
-    if (!empty($am__group)) {
-      foreach ($am__group as $key => $value) {
-        $am__field = preg_split("/^(contact_group_)/", $value, -1, PREG_SPLIT_NO_EMPTY);
-        if (!empty($am__field)) {
+    if (!empty($am_group)) {
+      foreach ($am_group as $key => $value) {
+        $am_field = preg_split("/^(contact_group_)/", $value, -1, PREG_SPLIT_NO_EMPTY);
+        if (!empty($am_field)) {
           db_query("UPDATE {contact_fields} SET field_group = '%s' WHERE field_name = '%s'",
-            $form_values['clicked_button']['#post'][$value], $am__field[0]);
+            $form_values['clicked_button']['#post'][$value], $am_field[0]);
         }
       }
     }
@@ -180,8 +180,8 @@ function _get_fields() {
   $form_state = array();
   $form_state['method'] = 'post';
   $form_state['programmed'] = TRUE;
-  $am__weight = array();
-  $am__group = array();
+  $am_weight = array();
+  $am_group = array();
   $ss__build_id = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
 
   $header = array(t("Title"), t("Name"), t("Type"), t("Required"),
@@ -192,8 +192,8 @@ function _get_fields() {
     ->execute();
   $class = "";
 
-  while($om__result = $r__result->fetchObject()) {
-    if ($om__result->core) {
+  while($om_result = $r__result->fetchObject()) {
+    if ($om_result->core) {
       $ss__module = '';
       $class = "menu-disabled";
     }
@@ -201,72 +201,72 @@ function _get_fields() {
       $ss__module = '(Module: Contact form field)';
     }
 
-    $am__settings = unserialize($om__result->settings);
+    $am_settings = unserialize($om_result->settings);
 
-    $am__weight['#build_id'] = $ss__build_id;
-    $am__weight['contact_weight_'. $om__result->field_name] = array(
+    $am_weight['#build_id'] = $ss__build_id;
+    $am_weight['contact_weight_'. $om_result->field_name] = array(
       '#type' => 'textfield',
       '#title' => t("Weight"),
       '#size' => 5,
-      '#default_value' => $om__result->weight,
+      '#default_value' => $om_result->weight,
       '#attributes' => array('class' => array('contact-weight')),
     );
 
-    if ($om__result->field_type == 'fieldset') {
+    if ($om_result->field_type == 'fieldset') {
       $row = array(
-        $am__settings['title'],
-        $om__result->field_name,
+        $am_settings['title'],
+        $om_result->field_name,
         array('data' => t("Standard group")),
         NULL,
         NULL,
-        drupal_render(drupal_prepare_form($form_id, $am__weight, $form_state)),
-        ($om__result->core ? NULL : l(t("Configure"), 'admin/build/contact/'. $om__result->field_name ."/edit")),
-        ($om__result->core ? NULL : l(t("Remove"), 'admin/build/contact/'. $om__result->field_name ."/delete")),
+        drupal_render(drupal_prepare_form($form_id, $am_weight, $form_state)),
+        ($om_result->core ? NULL : l(t("Configure"), 'admin/build/contact/'. $om_result->field_name ."/edit")),
+        ($om_result->core ? NULL : l(t("Remove"), 'admin/build/contact/'. $om_result->field_name ."/delete")),
       );
-      drupal_add_tabledrag('contact-field', 'depth', 'parent', 'contact-group', NULL, 'contact-group-'. $om__result->field_name, TRUE);
-      drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight', NULL, 'contact-weight-'. $om__result->field_name, TRUE);
+      drupal_add_tabledrag('contact-field', 'depth', 'parent', 'contact-group', NULL, 'contact-group-'. $om_result->field_name, TRUE);
+      drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight', NULL, 'contact-weight-'. $om_result->field_name, TRUE);
     }
     else {
       if (module_exists('contact_group')) {
-      	$am__group['#build_id'] = $ss__build_id;
-        $am__group['contact_group_'. $om__result->field_name ."_parent"] = array(
+      	$am_group['#build_id'] = $ss__build_id;
+        $am_group['contact_group_'. $om_result->field_name ."_parent"] = array(
           '#type' => 'select',
           '#title' => t("Group"),
           '#multiple' => FALSE,
           '#parent' => array("parent"),
           '#options' => _get_contact_group(),
-          '#default_value' => $om__result->field_group ? $om__result->field_group : "",
+          '#default_value' => $om_result->field_group ? $om_result->field_group : "",
           '#attributes' => array('class' => array('contact-group')),
         );
 
-        $am__group[$om__result->field_name] = array(
+        $am_group[$om_result->field_name] = array(
           '#type' => 'hidden',
-          '#parent' => array($om__result->field_name),
-          '#default_value' => $om__result->field_name,
+          '#parent' => array($om_result->field_name),
+          '#default_value' => $om_result->field_name,
         );
       }
-      if (module_exists('contact_group') && $om__result->field_group != "") {
-        $am__in_group =  array(
+      if (module_exists('contact_group') && $om_result->field_group != "") {
+        $am_in_group =  array(
           '<div class="indentation">&nbsp;</div>',
-          $am__settings['title'] ." $ss__module",
+          $am_settings['title'] ." $ss__module",
         );
       }
       else {
-        $am__in_group =  array(
-          $am__settings['title'] ." $ss__module",
+        $am_in_group =  array(
+          $am_settings['title'] ." $ss__module",
         );
       }
-      $ss__group_fields = count($am__in_group == 2) ? implode("", $am__in_group) : $am__in_group[0];
+      $ss__group_fields = count($am_in_group == 2) ? implode("", $am_in_group) : $am_in_group[0];
       $row = array(
         $ss__group_fields,
-        drupal_render(drupal_prepare_form($form_id, $am__group, $form_state)),
-        $om__result->field_name,
-        $om__result->field_type,
-        ($om__result->required ? t("Yes") : t("No")),
-        ($om__result->core ? t("Yes") : ($om__result->enabled ? t("Yes") : t("No"))),
-        drupal_render(drupal_prepare_form($form_id, $am__weight, $form_state)),
-        ($om__result->core ? NULL : l(t("Configure"), 'admin/build/contact/'. $om__result->field_name ."/edit")),
-        ($om__result->core ? NULL : l(t("Remove"), 'admin/build/contact/'. $om__result->field_name ."/delete")),
+        drupal_render(drupal_prepare_form($form_id, $am_group, $form_state)),
+        $om_result->field_name,
+        $om_result->field_type,
+        ($om_result->required ? t("Yes") : t("No")),
+        ($om_result->core ? t("Yes") : ($om_result->enabled ? t("Yes") : t("No"))),
+        drupal_render(drupal_prepare_form($form_id, $am_weight, $form_state)),
+        ($om_result->core ? NULL : l(t("Configure"), 'admin/build/contact/'. $om_result->field_name ."/edit")),
+        ($om_result->core ? NULL : l(t("Remove"), 'admin/build/contact/'. $om_result->field_name ."/delete")),
       );
     }
 
@@ -276,15 +276,15 @@ function _get_fields() {
       'class' => array('draggable '. $class),
     );
 
-    unset($class, $am__weight, $am__group);
+    unset($class, $am_weight, $am_group);
   }
 
   //Add fields
-  $am__fields = module_invoke_all('info');
-  $am__field_type[0] = "-- ". t("Field type") ." --";
-  if (!empty($am__fields)) {
-    foreach ($am__fields as $key => $value) {
-      $am__field_type[$value['type']] = $value['title'];
+  $am_fields = module_invoke_all('info');
+  $am_field_type[0] = "-- ". t("Field type") ." --";
+  if (!empty($am_fields)) {
+    foreach ($am_fields as $key => $value) {
+      $am_field_type[$value['type']] = $value['title'];
     }
   }
   else {
@@ -312,7 +312,7 @@ function _get_fields() {
   $form_field_type['field_type'] = array(
     '#type' => 'select',
     '#description' => t("Set the field type"),
-    '#options' => $am__field_type,
+    '#options' => $am_field_type,
   );
 
   $rows[] = array(
@@ -352,13 +352,13 @@ function _get_fields() {
 
   drupal_add_tabledrag('contact-field', 'depth', 'parent', 'contact-group', NULL, NULL, TRUE, 1);
   drupal_add_tabledrag('contact-field', 'order', 'sibling', 'contact-weight', NULL, NULL, TRUE);
-  $am__variable = array(
+  $am_variable = array(
     'header' => $header,
     'rows' => $rows,
     'attributes' => array('id' => 'contact-field'),
     'sticky' => TRUE,
   );
-  return theme('table', $am__variable);
+  return theme('table', $am_variable);
 }
 
 
@@ -377,9 +377,9 @@ function _set_core_fields() {
   module_load_include('inc', 'contact', 'contact.pages');
   $form = contact_site_form($form, $form_state);
   $i = -10;
-  $am__exclude = array('#token', 'submit', 'copy', 'contact_information', '#attributes', 'actions');
+  $am_exclude = array('#token', 'submit', 'copy', 'contact_information', '#attributes', 'actions');
   foreach ($form as $name => $attribute) {
-    if (!in_array($name, $am__exclude) && !empty($attribute['#type'])) {
+    if (!in_array($name, $am_exclude) && !empty($attribute['#type'])) {
      $result = db_select('contact_fields', 'cf')
         ->fields('cf', array('field_name'))
         ->condition('core', 1, '=')
@@ -387,12 +387,12 @@ function _set_core_fields() {
         ->execute()
         ->fetchAssoc();
       if (empty($result['field_name'])) {
-        $am__settings = array('title' => $form[$name]['#title']);
+        $am_settings = array('title' => $form[$name]['#title']);
         db_insert('contact_fields')
           ->fields(array(
             'field_name' => $name,
             'field_type' => $attribute['#type'],
-            'settings' => serialize($am__settings),
+            'settings' => serialize($am_settings),
             'required' => !empty($attribute['#required']) ? $attribute['#required'] : 0,
             'enabled' => 1,
             'weight' => $i,
