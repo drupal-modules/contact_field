@@ -11,7 +11,7 @@
 
 /**
  * Implementation of hook_schema
- * 
+ *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_schema() {
@@ -54,13 +54,13 @@ function contact_field_schema() {
         'unsigned' => FALSE,
         'length' => 255,
       ),
-      
+
       'core' => array(
         'type' => 'int',
         'length' => 1,
         'default' => 0,
       ),
-      
+
       'field_group' => array(
         'type' => 'varchar',
         'length' => 255,
