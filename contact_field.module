@@ -346,9 +346,10 @@ function contact_field_mail_alter($message) {
  *  @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function _get_enabled_fields() {
-	$r__result = db_query("SELECT field_name, field_type, settings FROM {contact_fields} 
-	  WHERE  enabled = 1 AND core = 0 AND field_type <> 'fieldset'");
-	while ($om__result = db_fetch_object($r__result)) {
+  $r__result = db_query("SELECT field_name, field_type, settings FROM {contact_fields} 
+    WHERE  enabled = 1 AND core = 0 AND field_type <> 'fieldset'")
+    ->fetchAll();
+  while ($om__result = array_pop($r__result)) {
 		$am__settings = unserialize($om__result->settings);
 		$am__field[$om__result->field_type][$om__result->field_name] = $am__settings['title'];
 	}
