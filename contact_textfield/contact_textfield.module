@@ -2,18 +2,18 @@
 
 /**
  * @file
- * 
+ *
  * Add textfields on contact form
- * 
+ *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 
 
 /**
  * contact_textfield_field_info
- * 
+ *
  * Returns field infomrmation
- * 
+ *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_textfield_info() {
@@ -59,7 +59,7 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
     '#description' => t("Field name can not be changed."),
     '#weight' => -50,
   );
-  
+
   $form['contact_field_name'] = array(
     '#type' => 'hidden',
     '#value' => $om__field_details->name,
@@ -249,7 +249,7 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     $form['#submit'] = array('contact_field_submit');
     $form['#validate'] = array('contact_field_validate');
   }
-  
+
   $form['name'] = array(
     '#type' => 'item',
     '#title' => t("Field name"),
@@ -257,12 +257,12 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
     '#description' => t("Field name can not be changed."),
     '#weight' => -50,
   );
-  
+
   $form['contact_field_name'] = array(
     '#type' => 'hidden',
     '#value' => $om__field_details->name,
   );
-  
+
   $form['field_type'] = array(
     '#type' => 'hidden',
     '#default_value' => 'textarea',
