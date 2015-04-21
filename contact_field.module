@@ -25,7 +25,7 @@ function contact_field_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_field_form'), // @fixme
     'access arguments' => array('administer site configuration'),
-    'file' => 'contact_field_admin.inc',
+    'file' => 'contact_field.admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
     'weight' => 49,
   );
@@ -37,7 +37,7 @@ function contact_field_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_field_display_field'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'contact_field_admin.inc',
+    'file' => 'contact_field.admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
     'weight' => 50,
   );
@@ -47,7 +47,7 @@ function contact_field_menu() {
     'page callback' => 'contact_field_add_field',
     'page arguments' => array(3, 4),
     'access arguments' => array('administer site configuration'),
-    'file' => 'contact_field_admin.inc',
+    'file' => 'contact_field.admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
   );
 
@@ -56,7 +56,7 @@ function contact_field_menu() {
     'page callback' => 'contact_field_add_field',
     'page arguments' => array(3),
     'access arguments' => array('administer site configuration'),
-    'file' => 'contact_field_admin.inc',
+    'file' => 'contact_field.admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
   );
 
@@ -65,7 +65,7 @@ function contact_field_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_field_confirm_delete_field', 3),
     'access arguments' => array('administer site configuration'),
-    'file' => 'contact_field_admin.inc',
+    'file' => 'contact_field.admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
   );
 
@@ -79,7 +79,7 @@ function contact_field_menu() {
 function contact_field_theme() {
   return array(
     'contact_field_form' => array(
-      'file' => 'contact_field_admin.inc',
+      'file' => 'contact_field.admin.inc',
       'file path' => drupal_get_path('module', 'contact_field'),
       'render element' => 'form',
     ),

@@ -104,7 +104,7 @@ function contact_field_delete_field($field_name) {
  */
 function contact_field_edit_field($field) {
   if ($field) {
-    module_load_include('inc', 'contact_field', 'contact_field_admin');
+    module_load_include('inc', 'contact_field', 'contact_field.admin');
     $field_type = db_query("SELECT field_type FROM {contact_fields} WHERE field_name = ':field'", array(':field' => $field))->fetchField();
     switch($field_type) {
       case 'textfield':
@@ -410,7 +410,7 @@ function _get_fields() {
   unset($form_part_label, $form_part_name, $form_part_type);
 
   if (module_exists('contact_group')) {
-  	$form_group_label['#build_id'] = $ss_build_id;
+    $form_group_label['#build_id'] = $ss_build_id;
     $form_group_label['field_group_label'] = array(
       '#type' => 'textfield',
       '#title' => t("New group"),
