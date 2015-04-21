@@ -86,7 +86,7 @@ function contact_field_add_field($op, $om_field_details = NULL) {
 /**
  * contact_field_delete_field
  *
- * @param string $ss__field_name
+ * @param string $ss_field_name
  *  The field name to be deleted
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */

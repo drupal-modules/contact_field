@@ -40,7 +40,7 @@ function contact_textfield_info() {
  * @return unknown_type
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, $om_field_details = NULL) {
+function contact_field_add_field_text_form($form_state, $ss_field_name = NULL, $om_field_details = NULL) {
   $form = array();
 
   if (arg(3) != 'add') {
@@ -181,23 +181,23 @@ function contact_field_add_field_text_form($form_state, $ss__field_name = NULL, 
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_submit($form, $form_values) {
-  $ss__field_name = $form_values['values']['contact_field_name'];
-  $ss__field_type = $form_values['values']['field_type'];
-  $ss__field_required = $form_values['values']['contact_field_require'];
-  $ss__field_enabled = $form_values['values']['contact_field_enabled'];
-  $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $ss__field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
-  $ss__field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
-  $ss__field_settings['maxlength'] = $form_values['values']['contact_field_maxlength'] ? $form_values['values']['contact_field_maxlength'] : 255;
-  $ss__field_settings['field_prefix'] = $form_values['values']['contact_field_prefix_field'];
-  $ss__field_settings['field_suffix'] = $form_values['values']['contact_field_suffix_field'];
-  $ss__field_weight = $form_values['values']['contact_field_weight'];
+  $ss_field_name = $form_values['values']['contact_field_name'];
+  $ss_field_type = $form_values['values']['field_type'];
+  $ss_field_required = $form_values['values']['contact_field_require'];
+  $ss_field_enabled = $form_values['values']['contact_field_enabled'];
+  $ss_field_settings['title'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $ss_field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
+  $ss_field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
+  $ss_field_settings['maxlength'] = $form_values['values']['contact_field_maxlength'] ? $form_values['values']['contact_field_maxlength'] : 255;
+  $ss_field_settings['field_prefix'] = $form_values['values']['contact_field_prefix_field'];
+  $ss_field_settings['field_suffix'] = $form_values['values']['contact_field_suffix_field'];
+  $ss_field_weight = $form_values['values']['contact_field_weight'];
 
   db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, '%s', %d, '%s')",
-    $ss__field_name, $ss__field_type, serialize($ss__field_settings),
-    $ss__field_required, $ss__field_enabled, $ss__field_weight, 0, NULL);
-  drupal_set_message($ss__field_settings['title'] ." ". t("created"));
+    $ss_field_name, $ss_field_type, serialize($ss_field_settings),
+    $ss_field_required, $ss_field_enabled, $ss_field_weight, 0, NULL);
+  drupal_set_message($ss_field_settings['title'] ." ". t("created"));
   drupal_goto('admin/build/contact/manage');
 }
 
@@ -209,24 +209,24 @@ function contact_field_submit($form, $form_values) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_update($form, $form_values) {
-  $ss__field_name = $form_values['values']['contact_field_name'];
-  $ss__field_type = $form_values['values']['field_type'];
-  $ss__field_required = $form_values['values']['contact_field_require'];
-  $ss__field_enabled = $form_values['values']['contact_field_enabled'];
-  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
-  $ss__field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
-  $ss__field_settings['maxlength'] = $form_values['values']['contact_field_maxlength'] ? $form_values['values']['contact_field_maxlength'] : 255;
-  $ss__field_settings['field_prefix'] = $form_values['values']['contact_field_prefix_field'];
-  $ss__field_settings['field_suffix'] = $form_values['values']['contact_field_suffix_field'];
-  $ss__field_weight = $form_values['values']['contact_field_weight'];
+  $ss_field_name = $form_values['values']['contact_field_name'];
+  $ss_field_type = $form_values['values']['field_type'];
+  $ss_field_required = $form_values['values']['contact_field_require'];
+  $ss_field_enabled = $form_values['values']['contact_field_enabled'];
+  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $ss_field_settings['title'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
+  $ss_field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
+  $ss_field_settings['maxlength'] = $form_values['values']['contact_field_maxlength'] ? $form_values['values']['contact_field_maxlength'] : 255;
+  $ss_field_settings['field_prefix'] = $form_values['values']['contact_field_prefix_field'];
+  $ss_field_settings['field_suffix'] = $form_values['values']['contact_field_suffix_field'];
+  $ss_field_weight = $form_values['values']['contact_field_weight'];
 
   db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d,
-    required = %d, weight = '%s' WHERE field_name = '%s'", serialize($ss__field_settings),
-    $ss__field_enabled, $ss__field_required, $ss__field_weight, $ss__field_name);
+    required = %d, weight = '%s' WHERE field_name = '%s'", serialize($ss_field_settings),
+    $ss_field_enabled, $ss_field_required, $ss_field_weight, $ss_field_name);
 
-  drupal_set_message($ss__field_settings['title'] ." ". t("updated"));
+  drupal_set_message($ss_field_settings['title'] ." ". t("updated"));
   drupal_goto('admin/build/contact/manage');
 }
 
@@ -238,7 +238,7 @@ function contact_field_update($form, $form_values) {
  *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_textarea_form($form_state, $ss__field_name = NULL, $om_field_details = NULL) {
+function contact_field_add_field_textarea_form($form_state, $ss_field_name = NULL, $om_field_details = NULL) {
   drupal_set_title(t("Configure text area"));
   $form = array();
   if (arg(3) != 'add') {
@@ -351,21 +351,21 @@ function contact_field_add_field_textarea_form($form_state, $ss__field_name = NU
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_textarea_submit($form, $form_values) {
-  $ss__field_name = $form_values['values']['contact_field_name'];
-  $ss__field_type = $form_values['values']['field_type'];
-  $ss__field_required = $form_values['values']['contact_field_require'];
-  $ss__field_enabled = $form_values['values']['contact_field_enabled'];
-  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['rows'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['cols'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $ss__field_weight = $form_values['values']['contact_field_weight'];
+  $ss_field_name = $form_values['values']['contact_field_name'];
+  $ss_field_type = $form_values['values']['field_type'];
+  $ss_field_required = $form_values['values']['contact_field_require'];
+  $ss_field_enabled = $form_values['values']['contact_field_enabled'];
+  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $ss_field_settings['title'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['rows'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['cols'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $ss_field_weight = $form_values['values']['contact_field_weight'];
 
   db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, '%s', %d, '%s')",
-    $ss__field_name, $ss__field_type, serialize($ss__field_settings),
-    $ss__field_required, $ss__field_enabled, $ss__field_weight, 0, NULL);
-  drupal_set_message($ss__field_settings['title'] ." ". t("created"));
+    $ss_field_name, $ss_field_type, serialize($ss_field_settings),
+    $ss_field_required, $ss_field_enabled, $ss_field_weight, 0, NULL);
+  drupal_set_message($ss_field_settings['title'] ." ". t("created"));
   drupal_goto('admin/build/contact/manage');
 }
 
@@ -379,21 +379,21 @@ function contact_field_textarea_submit($form, $form_values) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_textarea_update($form, $form_values) {
-  $ss__field_name = $form_values['values']['contact_field_name'];
-  $ss__field_type = $form_values['values']['field_type'];
-  $ss__field_required = $form_values['values']['contact_field_require'];
-  $ss__field_enabled = $form_values['values']['contact_field_enabled'];
-  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $ss__field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['rows'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['cols'] = $form_values['values']['contact_field_label'];
-  $ss__field_settings['description'] = $form_values['values']['contact_field_help'];
-  $ss__field_weight = $form_values['values']['contact_field_weight'];
+  $ss_field_name = $form_values['values']['contact_field_name'];
+  $ss_field_type = $form_values['values']['field_type'];
+  $ss_field_required = $form_values['values']['contact_field_require'];
+  $ss_field_enabled = $form_values['values']['contact_field_enabled'];
+  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $ss_field_settings['title'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['rows'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['cols'] = $form_values['values']['contact_field_label'];
+  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $ss_field_weight = $form_values['values']['contact_field_weight'];
 
   db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d,
-    required = %d, weight = '%s' WHERE field_name = '%s'", serialize($ss__field_settings),
-    $ss__field_enabled, $ss__field_required, $ss__field_weight, $ss__field_name);
+    required = %d, weight = '%s' WHERE field_name = '%s'", serialize($ss_field_settings),
+    $ss_field_enabled, $ss_field_required, $ss_field_weight, $ss_field_name);
 
-  drupal_set_message($ss__field_settings['title'] ." ". t("updated"));
+  drupal_set_message($ss_field_settings['title'] ." ". t("updated"));
   drupal_goto('admin/build/contact/manage');
 }

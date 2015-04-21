@@ -31,7 +31,7 @@ function contact_listfield_info() {
  *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_listfield_form($form_state, $ss__field_name = NULL, $om_field_details = NULL) {
+function contact_field_add_field_listfield_form($form_state, $ss_field_name = NULL, $om_field_details = NULL) {
   drupal_set_title(t("Configure list field"));
   $form = array();
   $ss_option = ""; //initialize it first
@@ -39,7 +39,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     $om_field_details = (object) _get_field_values($om_field_details);
     if (!empty($om_field_details->options)) {
       foreach ($om_field_details->options as $key => $value) {
-        $ss__option .= $key ."|". $value;
+        $ss_option .= $key ."|". $value;
       }
     }
     $form['#submit'] = array('contact_field_listfield_update');
@@ -144,7 +144,7 @@ function contact_field_add_field_listfield_form($form_state, $ss__field_name = N
     '#type' => 'textarea',
     '#title' => t("Allowed values"),
     '#description' => t("Add key-value pair in key|value format. Add each pair in separate line."),
-    '#default_value' => (!empty($ss__option) ? $ss__option : ""),
+    '#default_value' => (!empty($ss_option) ? $ss_option : ""),
     '#required' => TRUE,
     '#weight' => -42,
   );
@@ -193,14 +193,14 @@ function contact_field_listfield_submit($form, $form_values) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
       list($key, $value) = explode("|", $option);
-      $ss__field_settings['options'][$key] = $value;
+      $ss_field_settings['options'][$key] = $value;
     }
   }
 
   db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, %d, %d, '%s')",
-    $ss__field_name, $ss__field_type, serialize($ss__field_settings),
-    $ss__field_required, $ss__field_enabled, $ss__field_weight, 0, NULL);
-  drupal_set_message($ss__field_settings['title'] ." ". t("created"));
+    $ss_field_name, $ss_field_type, serialize($ss_field_settings),
+    $ss_field_required, $ss_field_enabled, $ss_field_weight, 0, NULL);
+  drupal_set_message($ss_field_settings['title'] ." ". t("created"));
   drupal_goto('admin/build/contact/manage');
 }
 
@@ -230,14 +230,14 @@ function contact_field_listfield_update($form, $form_values) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
       list($key, $value) = explode("|", $option);
-      $ss__field_settings['options'][$key] = $value;
+      $ss_field_settings['options'][$key] = $value;
     }
   }
 
   db_query("UPDATE {contact_fields} SET settings = '%s', enabled = %d,
-    required = %d, weight = %d WHERE field_name = '%s'", serialize($ss__field_settings),
-    $ss__field_enabled, $ss__field_required, $ss__field_weight, $ss__field_name);
+    required = %d, weight = %d WHERE field_name = '%s'", serialize($ss_field_settings),
+    $ss_field_enabled, $ss_field_required, $ss_field_weight, $ss_field_name);
 
-  drupal_set_message($ss__field_settings['title'] ." ". t("Updated"));
+  drupal_set_message($ss_field_settings['title'] ." ". t("Updated"));
   drupal_goto('admin/build/contact/manage');
 }
