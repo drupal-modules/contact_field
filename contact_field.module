@@ -21,10 +21,9 @@ function contact_field_menu() {
   $item = array();
   $item['admin/structure/contact/manage'] = array(
     'type' => MENU_LOCAL_TASK,
-    'title' => "Manage fields",
-    'title callback' => 't',
+    'title' => 'Manage fields',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('contact_field_list_field'),
+    'page arguments' => array('contact_field_form'),
     'access arguments' => array('administer site configuration'),
     'file' => 'contact_field_admin.inc',
     'file path' => drupal_get_path('module', 'contact_field'),
@@ -73,6 +72,18 @@ function contact_field_menu() {
   return $item;
 }
 
+/**
+ * Output contact field management form via theme (to wrap contact fields in a table with draggable weights).
+ * Implements hook_theme().
+ */
+function contact_field_theme() {
+  return array(
+    'contact_field_form' => array(
+      'file' => 'contact_field_admin.inc',
+      'render element' => 'form',
+    ),
+  );
+}
 
 
 /**
@@ -262,16 +273,12 @@ function _contact_field_allowed_tags() {
 
 
 /**
- * _get_field_type
- *
  * Return type of the field
  *
- * @param string $ss__field_name
- * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
+ * @param string $field_name
  */
-function _get_field_type($ss_field_name) {
-  return db_result(db_query("SELECT field_type FROM {contact_fields}
-   WHERE field_name = '%s'", $ss_field_name));
+function _get_field_type($field_name) {
+  return db_query("SELECT field_type FROM {contact_fields} WHERE field_name = ':field_name'", array(':field_name' => $field_name))->fetchField();
 }
 
 
