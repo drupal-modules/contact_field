@@ -134,22 +134,22 @@ function contact_field_form_alter(&$form, $form_state, $form_id) {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_validate($form, $form_state) {
-  $ss_field_label = isset($form_state['clicked_button']['#post']['contact_field_label']) ? $form_state['clicked_button']['#post']['contact_field_label']
+  $field_label = isset($form_state['clicked_button']['#post']['contact_field_label']) ? $form_state['clicked_button']['#post']['contact_field_label']
     : NULL;
-  $ss_field_name = isset($form_state['clicked_button']['#post']['contact_field_name']) ? $form_state['clicked_button']['#post']['contact_field_name']
+  $field_name = isset($form_state['clicked_button']['#post']['contact_field_name']) ? $form_state['clicked_button']['#post']['contact_field_name']
     : NULL;
-  $ss_field_type = isset($form_state['clicked_button']['#post']['field_type']) ? $form_state['clicked_button']['#post']['field_type']
+  $field_type = isset($form_state['clicked_button']['#post']['field_type']) ? $form_state['clicked_button']['#post']['field_type']
     : NULL;
   $ss_group_label = isset($form_state['clicked_button']['#post']['field_group_label']) ? $form_state['clicked_button']['#post']['field_group_label']
     : NULL;
   $ss_group_name = isset($form_state['clicked_button']['#post']['field_group_name']) ? $form_state['clicked_button']['#post']['field_group_name']
     : NULL;
 
-  if ($ss_field_label && empty($ss_field_name)) {
+  if ($field_label && empty($field_name)) {
     form_set_error('field_name', t("Please set a unique field name."));
   }
 
-  if ($ss_field_label && $ss_field_name && empty($ss_field_type)) {
+  if ($field_label && $field_name && empty($field_type)) {
     form_set_error('field_type', t("Please select a field type."));
   }
 
@@ -157,8 +157,8 @@ function contact_field_validate($form, $form_state) {
     form_set_error('field_group_name', t("Please set a group name."));
   }
 
-  $ss_field_exist = db_query("SELECT field_type FROM {contact_fields} WHERE field_name = ':field_name'", array(':field_name' => $ss_field_name))->fetchField();
-  if ($ss_field_exist) {
+  $field_exist = db_query("SELECT field_type FROM {contact_fields} WHERE field_name = ':field_name'", array(':field_name' => $field_name))->fetchField();
+  if ($field_exist) {
     form_set_error('contact_field_name', t("A contact field with the same name already exists."));
   }
 }
@@ -223,13 +223,13 @@ function _get_field_details() {
  *
  * Return all the details related to a field
  *
- * @param array $ss_field
+ * @param array $field
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function _get_field_values($ss_field) {
-  if ($ss_field) {
+function _get_field_values($field) {
+  if ($field) {
     $r_result_field = db_query("SELECT * FROM {contact_fields} WHERE
-      field_name = '%s'", $ss_field);
+      field_name = '%s'", $field);
     while ($om_result_field = db_fetch_object($r_result_field)) {
       $am_field = unserialize($om_result_field->settings);
       $am_field_value['name'] = $om_result_field->field_name;
@@ -389,13 +389,13 @@ function _get_contact_group() {
  *
  * Return human readable values for options and lists
  *
- * @param unknown_type $ss_field_name
- * @param unknown_type $ss_field_value
+ * @param unknown_type $field_name
+ * @param unknown_type $field_value
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function _get_field_setting($ss_field_name, $am_field_value) {
+function _get_field_setting($field_name, $am_field_value) {
 //  $am_option_key = array_keys($am_field_value);
-  $r_result = db_query("SELECT settings FROM {contact_fields} WHERE field_name = '%s'", $ss_field_name);
+  $r_result = db_query("SELECT settings FROM {contact_fields} WHERE field_name = '%s'", $field_name);
   $om_result = db_fetch_object($r_result);
   $am_settings = unserialize($om_result->settings);
   foreach ($am_field_value as $value) {

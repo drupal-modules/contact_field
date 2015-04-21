@@ -29,7 +29,7 @@ function contact_option_info() {
  *
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_add_field_option_form($form_state, $ss_field_name = NULL, $om_field_details = NULL) {
+function contact_field_add_field_option_form($form_state, $field_name = NULL, $om_field_details = NULL) {
   drupal_set_title(t("Configure option field"));
   $form = array();
   $ss_option = ""; //initialize it first
@@ -172,28 +172,28 @@ function contact_field_add_field_option_form($form_state, $ss_field_name = NULL,
  */
 function contact_field_option_submit($form, $form_values) {
   $ss_num_values = $form_values['values']['contact_field_num_value'];
-  $ss_field_type = ($ss_num_values) ? 'checkboxes' : 'radios';
-  $ss_field_name = $form_values['values']['contact_field_name'];
-  $ss_field_required = $form_values['values']['contact_field_require'];
-  $ss_field_enabled = $form_values['values']['contact_field_enabled'];
-  $ss_field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss_field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
-  $ss_field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
-  $ss_field_weight = $form_values['values']['contact_field_weight'];
+  $field_type = ($ss_num_values) ? 'checkboxes' : 'radios';
+  $field_name = $form_values['values']['contact_field_name'];
+  $field_required = $form_values['values']['contact_field_require'];
+  $field_enabled = $form_values['values']['contact_field_enabled'];
+  $field_settings['title'] = $form_values['values']['contact_field_label'];
+  $field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
+  $field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
+  $field_weight = $form_values['values']['contact_field_weight'];
   $am_options = explode("\n", $form_values['values']['contact_field_vlaues']);
   foreach ($am_options as $option) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
       list($key, $value) = explode("|", $option);
-      $ss_field_settings['options'][$key] = $value;
+      $field_settings['options'][$key] = $value;
     }
   }
-  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $field_settings['description'] = $form_values['values']['contact_field_help'];
 
   db_query("INSERT INTO {contact_fields} VALUES('%s', '%s', '%s', %d, %d, %d, %d, '%s')",
-    $ss_field_name, $ss_field_type, serialize($ss_field_settings),
-    $ss_field_required, $ss_field_enabled, $ss_field_weight, 0, NULL);
-  drupal_set_message($ss_field_settings['title'] ." ". t("created"));
+    $field_name, $field_type, serialize($field_settings),
+    $field_required, $field_enabled, $field_weight, 0, NULL);
+  drupal_set_message($field_settings['title'] ." ". t("created"));
   drupal_goto('admin/build/contact/manage');
 }
 
@@ -207,15 +207,15 @@ function contact_field_option_submit($form, $form_values) {
  */
 function contact_field_option_update($form, $form_values) {
   $ss_num_values = $form_values['values']['contact_field_num_value'];
-  $ss_field_name = $form_values['values']['contact_field_name'];
-  $ss_field_type = ($ss_num_values) ? 'checkboxes' : 'radios';
-  $ss_field_required = $form_values['values']['contact_field_require'];
-  $ss_field_enabled = $form_values['values']['contact_field_enabled'];
-  $ss_field_settings['title'] = $form_values['values']['contact_field_label'];
-  $ss_field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
-  $ss_field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
-  $ss_field_weight = $form_values['values']['contact_field_weight'];
-  $ss_field_settings['description'] = $form_values['values']['contact_field_help'];
+  $field_name = $form_values['values']['contact_field_name'];
+  $field_type = ($ss_num_values) ? 'checkboxes' : 'radios';
+  $field_required = $form_values['values']['contact_field_require'];
+  $field_enabled = $form_values['values']['contact_field_enabled'];
+  $field_settings['title'] = $form_values['values']['contact_field_label'];
+  $field_settings['prefix'] = $form_values['values']['contact_field_prefix'];
+  $field_settings['suffix'] = $form_values['values']['contact_field_suffix'];
+  $field_weight = $form_values['values']['contact_field_weight'];
+  $field_settings['description'] = $form_values['values']['contact_field_help'];
 
   $am_options = explode("\n", $form_values['values']['contact_field_vlaues']);
   foreach ($am_options as $option) {
@@ -223,12 +223,12 @@ function contact_field_option_update($form, $form_values) {
     $option = contact_field_filter_xss($option);
     if (strpos($option, '|') !== FALSE) {
       list($key, $value) = explode("|", $option);
-      $ss_field_settings['options'][$key] = $value;
+      $field_settings['options'][$key] = $value;
     }
   }
 
   db_query("UPDATE {contact_fields} SET field_type = '%s', settings = '%s', enabled = %d,
-    required = %d, weight = %d WHERE field_name = '%s'", $ss_field_type, serialize($ss_field_settings),
-    $ss_field_enabled, $ss_field_required, $ss_field_weight, $ss_field_name);
+    required = %d, weight = %d WHERE field_name = '%s'", $field_type, serialize($field_settings),
+    $field_enabled, $field_required, $field_weight, $field_name);
   drupal_goto('admin/build/contact/manage');
 }

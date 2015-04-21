@@ -20,10 +20,10 @@ function contact_field_add_field($op, $om_field_details = NULL) {
   if ($om_field_details) {
     $om_field_details = unserialize($om_field_details);
   }
-  $ss_field_type = _get_field_type($op);
+  $field_type = _get_field_type($op);
 
   if ($op != 'add') {
-    switch ($ss_field_type) {
+    switch ($field_type) {
       case 'textfield':
         if (module_exists('contact_textfield')) {
           return drupal_get_form('contact_field_add_field_text_form', $form_state, $op);
@@ -86,13 +86,13 @@ function contact_field_add_field($op, $om_field_details = NULL) {
 /**
  * contact_field_delete_field
  *
- * @param string $ss_field_name
+ * @param string $field_name
  *  The field name to be deleted
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
-function contact_field_delete_field($ss_field_name) {
-  if ($ss_field_name) {
-    db_query("DELETE FROM {contact_fields} WHERE field_name = '%s'", $ss_field_name);
+function contact_field_delete_field($field_name) {
+  if ($field_name) {
+    db_query("DELETE FROM {contact_fields} WHERE field_name = '%s'", $field_name);
     drupal_goto("admin/build/contact/manage");
   }
 
@@ -100,15 +100,15 @@ function contact_field_delete_field($ss_field_name) {
 
 /**
  *
- * @param string $ss_field
+ * @param string $field
  */
-function contact_field_edit_field($ss_field) {
-  if ($ss_field) {
+function contact_field_edit_field($field) {
+  if ($field) {
     module_load_include('inc', 'contact_field', 'contact_field_admin');
-    $ss_field_type = db_query("SELECT field_type FROM {contact_fields} WHERE field_name = ':field'", array(':field' => $ss_field))->fetchField();
-    switch($ss_field_type) {
+    $field_type = db_query("SELECT field_type FROM {contact_fields} WHERE field_name = ':field'", array(':field' => $field))->fetchField();
+    switch($field_type) {
       case 'textfield':
-        return drupal_get_form('contact_field_add_field_text_form', $form_state, $ss_field, TRUE);
+        return drupal_get_form('contact_field_add_field_text_form', $form_state, $field, TRUE);
     }
   }
 }
@@ -149,9 +149,9 @@ function contact_field_list_field() {
  * @author Bhavin H. Joshi <bhavinjosi@joshics.in>
  */
 function contact_field_list_update($form, $form_values) {
-  $ss_field_label = $form_values['clicked_button']['#post']['field_label'];
-  $ss_field_name = $form_values['clicked_button']['#post']['field_name'];
-  $ss_field_type = $form_values['clicked_button']['#post']['field_type'];
+  $field_label = $form_values['clicked_button']['#post']['field_label'];
+  $field_name = $form_values['clicked_button']['#post']['field_name'];
+  $field_type = $form_values['clicked_button']['#post']['field_type'];
 
   if (module_exists('contact_group')) {
     $ss_group_label = $form_values['clicked_button']['#post']['field_group_label'];
@@ -161,8 +161,8 @@ function contact_field_list_update($form, $form_values) {
     $ss_group_label = $ss_group_name = NULL; //just initialize it to avoid Notices.
   }
 
-  if ($ss_field_name && $ss_field_label && $ss_field_type) {
-    $om_field_details = (object) array('name' => "field_". $ss_field_name, 'title' => $ss_field_label, 'type' => $ss_field_type);
+  if ($field_name && $field_label && $field_type) {
+    $om_field_details = (object) array('name' => "field_". $field_name, 'title' => $field_label, 'type' => $field_type);
     drupal_goto("admin/build/contact/add/". serialize($om_field_details));
   }
 
