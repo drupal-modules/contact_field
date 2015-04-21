@@ -105,8 +105,7 @@ function contact_field_delete_field($ss_field_name) {
 function contact_field_edit_field($ss_field) {
   if ($ss_field) {
     module_load_include('inc', 'contact_field', 'contact_field_admin');
-    $ss_field_type = db_result(db_query("SELECT field_type FROM {contact_fields}
-      WHERE field_name = '%s'", $ss_field));
+    $ss_field_type = db_query("SELECT field_type FROM {contact_fields} WHERE field_name = ':field'", array(':field' => $ss_field))->fetchField();
     switch($ss_field_type) {
       case 'textfield':
         return drupal_get_form('contact_field_add_field_text_form', $form_state, $ss_field, TRUE);

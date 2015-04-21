@@ -157,8 +157,7 @@ function contact_field_validate($form, $form_state) {
     form_set_error('field_group_name', t("Please set a group name."));
   }
 
-  $ss_field_exist = db_result(db_query("SELECT field_type FROM {contact_fields}
-    WHERE field_name = '%s'", $ss_field_name));
+  $ss_field_exist = db_query("SELECT field_type FROM {contact_fields} WHERE field_name = ':field_name'", array(':field_name' => $ss_field_name))->fetchField();
   if ($ss_field_exist) {
     form_set_error('contact_field_name', t("A contact field with the same name already exists."));
   }
